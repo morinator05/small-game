@@ -7,7 +7,7 @@
 #include <raylib.h>
 
 typedef struct {
-    Texture2D player_idle;
+    Texture2D player;
 }Assets;
 
 void LoadAssets(Assets* assets);
