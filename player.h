@@ -16,7 +16,7 @@ typedef enum {
 
 typedef struct {
     Sprite sprite;
-    float velocity;
+    int velocity;
     Rectangle frameRectangle;
 } Player;
 

@@ -14,11 +14,11 @@ void CreatePlayer(Player *player, Texture2D texture) {
     player->sprite.destination = (Rectangle){400, 400, 100, 100};
     player->sprite.origin = (Vector2){0, 0};
     player->sprite.rotation = 0;
-    player->velocity = .5f;
+    player->velocity = 200;
 }
 
 void MovePlayer(Player *player) {
-    float distance = player->velocity * 10;
+    float distance = player->velocity * GetFrameTime();
     if (IsKeyDown(KEY_W)) {
         player->sprite.origin.y += distance;
         SetDirection(player, DIRECTION_UP);

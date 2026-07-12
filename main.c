@@ -4,17 +4,19 @@
 #include "player.h"
 
 int main() {
-    InitWindow(800, 800, "test");
-    SetTargetFPS(60);
 
+    //Innit the Window
+    InitWindow(800, 800, "test");
+    SetTargetFPS(GetMonitorRefreshRate(0));
+
+    //Load the assets
     Assets assets;
     LoadAssets(&assets);
 
+    //create a player
     Player player;
     CreatePlayer(&player, assets.player);
-
-    float delta = 0.f;
-    const float update_threshold = .005f;
+    player.velocity = 1000;
 
     while (!WindowShouldClose()) {
 
@@ -24,12 +26,8 @@ int main() {
 
         DrawPlayer(&player);
 
-        if (delta >= update_threshold) {
             //update game
             MovePlayer(&player);
-            delta = 0.f;
-        }
-        delta += GetFrameTime();
 
         EndDrawing();
     }

@@ -3,14 +3,7 @@
 //
 
 #include <raylib.h>
-
-typedef struct {
-    int width;
-    int height;
-    int *tiles;
-
-    Texture2D tileset;
-} TileMap;
+#include "tilemap.h"
 
 void CreateTileMap(TileMap *tilemap, int width, int height, int *tileset) {
 
@@ -21,5 +14,9 @@ void DestroyTileMap(TileMap *tilemap) {
 }
 
 void DrawTileMap(TileMap *tilemap) {
+
+}
+
+bool CheckCollisionWithMap(TileMap *tilemap, Vector2 pos) {
 
 }
