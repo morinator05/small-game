@@ -49,7 +49,14 @@ void MovePlayer(Player *player, TileMap *tilemap)
         SetDirection(player, DIRECTION_RIGHT);
     }
 
-    if (!CheckCollisionWithMap(tilemap, new_position))
+    Rectangle playerRect = {
+        new_position.x,
+        new_position.y,
+        TILE_SIZE,
+        TILE_SIZE
+    };
+
+    if (!CheckCollisionWithMap(tilemap, playerRect))
     {
         player->position = new_position;
     }

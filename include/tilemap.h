@@ -18,6 +18,6 @@ typedef struct {
 
 void DrawTileMap(TileMap *tilemap);
 void DestroyTileMap(TileMap *tilemap);
-bool CheckCollisionWithMap(TileMap *tilemap, Vector2 pos);
+bool CheckCollisionWithMap(TileMap *tilemap, Rectangle playerRect);
 
 #endif //TESTGAME2_TILEMAP_H

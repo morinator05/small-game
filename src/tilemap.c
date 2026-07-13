@@ -5,6 +5,10 @@
 #include <raylib.h>
 #include "../include/tilemap.h"
 
+#include <stdio.h>
+
+#define PLAYER_MARGIN 4
+
 void DestroyTileMap(TileMap *tilemap) {
 }
 
@@ -42,17 +46,33 @@ void DrawTileMap(TileMap *tilemap)
     }
 }
 
-bool CheckCollisionWithMap(TileMap *tilemap, Vector2 pos)
+bool CheckCollisionWithMap(TileMap *tilemap, Rectangle playerRect)
 {
-    float tile_x = pos.x / TILE_SIZE;
-    float tile_y = pos.y / TILE_SIZE;
+    for (int y = 0; y < tilemap->height; y++)
+    {
+        for (int x = 0; x < tilemap->width; x++)
+        {
+            if (tilemap->tiles[y * tilemap->width + x] != 1)
+                continue;
 
-    // außerhalb der Map
-    if (tile_x <  (-0.2f) || tile_x >= tilemap->width - 0.8f)
-        return true;
+            Rectangle tileRect = {
+                x * TILE_SIZE,
+                y * TILE_SIZE,
+                TILE_SIZE,
+                TILE_SIZE
+            };
 
-    if (tile_y < (-0.6f) || tile_y >= tilemap->height - 1)
-        return true;
+            Rectangle playerCollision = {
+                playerRect.x + PLAYER_MARGIN,
+                playerRect.y + PLAYER_MARGIN,
+                playerRect.width - (2 * PLAYER_MARGIN),
+                playerRect.height - PLAYER_MARGIN
+            };
+
+            if (CheckCollisionRecs(playerCollision, tileRect))
+                return true;
+        }
+    }
 
     return false;
 }
