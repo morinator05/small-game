@@ -6,7 +6,6 @@
 #include "../include/tilemap.h"
 
 void DestroyTileMap(TileMap *tilemap) {
-
 }
 
 void DrawTileMap(TileMap *tilemap)
@@ -43,6 +42,17 @@ void DrawTileMap(TileMap *tilemap)
     }
 }
 
-bool CheckCollisionWithMap(TileMap *tilemap, Vector2 pos) {
+bool CheckCollisionWithMap(TileMap *tilemap, Vector2 pos)
+{
+    float tile_x = pos.x / TILE_SIZE;
+    float tile_y = pos.y / TILE_SIZE;
 
+    // außerhalb der Map
+    if (tile_x <  (-0.2f) || tile_x >= tilemap->width - 0.8f)
+        return true;
+
+    if (tile_y < (-0.6f) || tile_y >= tilemap->height - 1)
+        return true;
+
+    return false;
 }

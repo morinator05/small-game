@@ -4,6 +4,8 @@
 
 #include "../include/player.h"
 
+#include "../include/tilemap.h"
+
 void DrawPlayer(Player *player){
     DrawSprite(&player->sprite, player->position);
 }
@@ -17,23 +19,39 @@ void CreatePlayer(Player *player, Texture2D texture) {
     player->velocity = 42;
 }
 
-void MovePlayer(Player *player) {
+void MovePlayer(Player *player, TileMap *tilemap)
+{
     float distance = player->velocity * GetFrameTime();
-    if (IsKeyDown(KEY_W)) {
-        player->position.y -= distance;
+
+    Vector2 new_position = player->position;
+
+    if (IsKeyDown(KEY_W))
+    {
+        new_position.y -= distance;
         SetDirection(player, DIRECTION_UP);
     }
-    if (IsKeyDown(KEY_A)) {
-        player->position.x -= distance;
-        SetDirection(player, DIRECTION_LEFT);
-    }
-    if (IsKeyDown(KEY_S)) {
-        player->position.y += distance;
+
+    if (IsKeyDown(KEY_S))
+    {
+        new_position.y += distance;
         SetDirection(player, DIRECTION_DOWN);
     }
-    if (IsKeyDown(KEY_D)) {
-        player->position.x += distance;
+
+    if (IsKeyDown(KEY_A))
+    {
+        new_position.x -= distance;
+        SetDirection(player, DIRECTION_LEFT);
+    }
+
+    if (IsKeyDown(KEY_D))
+    {
+        new_position.x += distance;
         SetDirection(player, DIRECTION_RIGHT);
+    }
+
+    if (!CheckCollisionWithMap(tilemap, new_position))
+    {
+        player->position = new_position;
     }
 }
 

@@ -1,4 +1,5 @@
 #include <raylib.h>
+#include <stdio.h>
 
 #include "../include/assets.h"
 #include "../include/player.h"
@@ -31,9 +32,11 @@ int main() {
         GetScreenHeight() / 2.0f
     };
 
+    float console_log_threshold = .5f;
+    float console_log_update = .0f;
+
     while (!WindowShouldClose()) {
         camera.target = player.position;
-
         BeginDrawing();
         BeginMode2D(camera);
 
@@ -42,12 +45,20 @@ int main() {
         DrawPlayer(&player);
 
         EndMode2D();
-
             //update game
-            MovePlayer(&player);
+            MovePlayer(&player, &level);
 
         EndDrawing();
+
+        console_log_update += GetFrameTime();
+        if (console_log_update > console_log_threshold)
+        {
+            console_log_update = .0f;
+            printf("Position player: {%f, %f}\n", player.position.x, player.position.y);
+        }
+
+
     }
 
-    CloseWindow();
+        CloseWindow();
 }

@@ -5,6 +5,7 @@
 #ifndef TESTGAME2_PLAYER_H
 #define TESTGAME2_PLAYER_H
 #include "sprite.h"
+#include "tilemap.h"
 
 
 typedef enum {
@@ -23,7 +24,7 @@ typedef struct {
 
 void CreatePlayer(Player* player, Texture2D texture);
 void DrawPlayer(Player* player);
-void MovePlayer(Player* player);
+void MovePlayer(Player* player, TileMap* tilemap);
 void SetDirection(Player* player, Direction direction);
 
 #endif //TESTGAME2_PLAYER_H
