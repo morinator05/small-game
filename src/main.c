@@ -19,7 +19,7 @@ int main() {
     //create a player
     Player player;
     CreatePlayer(&player, assets.player);
-    player.position = (Vector2) {40.f, 40.f};
+    player.position = (Vector2) {40.f, 20.f};
 
     TileMap level;
     CreateLevel1(&level, assets);
@@ -58,5 +58,6 @@ int main() {
             printf("Position of player: {x:%2f, y:%2f}\n", player.position.x, player.position.y);
         }
     }
+        UnloadAssets(&assets);
         CloseWindow();
 }

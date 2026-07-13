@@ -5,9 +5,10 @@
 
 
 void LoadAssets(Assets* assets) {
-    assets->player =        LoadTexture("asset/player_idle_map.png");
+    assets->player =        LoadTexture("asset/player_all_tiles.png");
     assets->worldDefault =  LoadTexture("asset/world_default.png");
 }
 void UnloadAssets(Assets* assets) {
     UnloadTexture(assets->player);
+    UnloadTexture(assets->worldDefault);
 }

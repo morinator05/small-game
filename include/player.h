@@ -20,6 +20,8 @@ typedef struct {
     Vector2 position;
     int velocity;
     Rectangle frameRectangle;
+    int currentFrame;
+    float animationTimer;
 } Player;
 
 void CreatePlayer(Player* player, Texture2D texture);
