@@ -6,6 +6,8 @@
 #define TESTGAME2_TILEMAP_H
 #include <raylib.h>
 
+#define TILE_SIZE 16
+
 typedef struct {
     int width;
     int height;

@@ -8,7 +8,7 @@
 int main() {
 
     //Innit the Window
-    InitWindow(512, 512, "test");
+    InitWindow(1280, 920, "test");
     SetTargetFPS(GetMonitorRefreshRate(0));
 
     //Load the assets
@@ -18,18 +18,30 @@ int main() {
     //create a player
     Player player;
     CreatePlayer(&player, assets.player);
-    player.velocity = 150;
 
     TileMap level;
     CreateLevel1(&level, assets);
 
+    Camera2D camera = {0};
+    camera.target = player.position;
+    camera.rotation = 0.0f;
+    camera.zoom = 4.0f;
+    camera.offset = (Vector2){
+        GetScreenWidth() / 2.0f,
+        GetScreenHeight() / 2.0f
+    };
+
     while (!WindowShouldClose()) {
+        camera.target = player.position;
 
         BeginDrawing();
+        BeginMode2D(camera);
 
-        ClearBackground(GRAY);
+        ClearBackground(BLACK);
         DrawTileMap(&level);
         DrawPlayer(&player);
+
+        EndMode2D();
 
             //update game
             MovePlayer(&player);

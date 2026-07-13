@@ -11,8 +11,6 @@ void DestroyTileMap(TileMap *tilemap) {
 
 void DrawTileMap(TileMap *tilemap)
 {
-    const int TILE_SIZE = 16;
-
     for (int y = 0; y < tilemap->height; y++)
     {
         for (int x = 0; x < tilemap->width; x++)

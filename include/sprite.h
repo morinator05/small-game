@@ -6,16 +6,17 @@
 #define TESTGAME2_SPRITE_H
 #include <raylib.h>
 
+#define TILE_SIZE 16
+
 typedef struct {
     Texture2D texture;
     Rectangle source;
-    Rectangle destination;
     Vector2 origin;
     float rotation;
     float velocity;
 } Sprite;
 
-void DrawSprite(Sprite *sprite);
+void DrawSprite(Sprite *sprite, Vector2 position);
 void UnloadSprite(Sprite *sprite);
 
 #endif //TESTGAME2_SPRITE_H
