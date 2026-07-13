@@ -11,7 +11,7 @@ void DrawPlayer(Player *player) {
 void CreatePlayer(Player *player, Texture2D texture) {
     player->sprite.texture = texture;
     player->sprite.source = (Rectangle){0, 0, 16, 16};
-    player->sprite.destination = (Rectangle){400, 400, 100, 100};
+    player->sprite.destination = (Rectangle){16, 16, 16, 16};
     player->sprite.origin = (Vector2){0, 0};
     player->sprite.rotation = 0;
     player->velocity = 200;
@@ -44,6 +44,10 @@ void SetDirection(Player *player, Direction direction) {
             player->sprite.source.x = 0;
             break;
 
+        case DIRECTION_UP:
+            player->sprite.source.x = 16;
+            break;
+
         case DIRECTION_LEFT:
             player->sprite.source.x = 32;
             break;
@@ -52,8 +56,6 @@ void SetDirection(Player *player, Direction direction) {
             player->sprite.source.x = 48;
             break;
 
-        case DIRECTION_UP:
-            player->sprite.source.x = 16;
-            break;
+
     }
 }

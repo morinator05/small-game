@@ -8,6 +8,7 @@
 
 typedef struct {
     Texture2D player;
+    Texture2D worldDefault;
 }Assets;
 
 void LoadAssets(Assets* assets);

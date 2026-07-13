@@ -2,11 +2,13 @@
 
 #include "assets.h"
 #include "player.h"
+#include "tilemap.h"
+#include "levels.h"
 
 int main() {
 
     //Innit the Window
-    InitWindow(800, 800, "test");
+    InitWindow(512, 512, "test");
     SetTargetFPS(GetMonitorRefreshRate(0));
 
     //Load the assets
@@ -16,14 +18,17 @@ int main() {
     //create a player
     Player player;
     CreatePlayer(&player, assets.player);
-    player.velocity = 1000;
+    player.velocity = 150;
+
+    TileMap level;
+    CreateLevel1(&level, assets);
 
     while (!WindowShouldClose()) {
 
         BeginDrawing();
 
-        ClearBackground(RAYWHITE);
-
+        ClearBackground(GRAY);
+        DrawTileMap(&level);
         DrawPlayer(&player);
 
             //update game
