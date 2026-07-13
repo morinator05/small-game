@@ -3,7 +3,7 @@
 //
 
 #include <raylib.h>
-#include "sprite.h"
+#include "../include/sprite.h"
 
 void DrawSprite(Sprite *sprite) {
     DrawTexturePro(sprite->texture, sprite->source, sprite->destination, sprite->origin, sprite->rotation, WHITE);

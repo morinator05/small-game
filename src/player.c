@@ -2,7 +2,7 @@
 // Created by mori on 12.07.26.
 //
 
-#include "player.h"
+#include "../include/player.h"
 
 void DrawPlayer(Player *player) {
     DrawSprite(&player->sprite);

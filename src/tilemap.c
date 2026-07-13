@@ -3,7 +3,7 @@
 //
 
 #include <raylib.h>
-#include "tilemap.h"
+#include "../include/tilemap.h"
 
 void DestroyTileMap(TileMap *tilemap) {
 

@@ -4,8 +4,8 @@
 
 #ifndef TESTGAME2_PLAYER_H
 #define TESTGAME2_PLAYER_H
-
 #include "sprite.h"
+
 
 typedef enum {
     DIRECTION_UP,

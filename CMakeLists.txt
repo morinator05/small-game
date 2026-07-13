@@ -4,16 +4,16 @@ project(testgame2 C)
 set(CMAKE_C_STANDARD 23)
 
 add_executable(testgame2 src/main.c
-        src/tilemap.h
+        include/tilemap.h
         src/tilemap.c
-        src/sprite.h
+        include/sprite.h
         src/sprite.c
-        src/player.h
+        include/player.h
         src/player.c
-        src/assets.h
+        include/assets.h
         src/assets.c
         src/levels.c
-        src/levels.h)
+        include/levels.h)
 
 target_link_libraries(testgame2 raylib)
 

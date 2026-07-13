@@ -2,8 +2,8 @@
 // Created by mori on 13.07.26.
 //
 
-#include "tilemap.h"
-#include "assets.h"
+#include "../include/assets.h"
+#include "../include/tilemap.h"
 
 static int mapLevel1[] = {
     0,0,0,0,0,0,0,0,0,0,

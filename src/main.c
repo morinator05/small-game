@@ -1,9 +1,9 @@
 #include <raylib.h>
 
-#include "assets.h"
-#include "player.h"
-#include "tilemap.h"
-#include "levels.h"
+#include "../include/assets.h"
+#include "../include/player.h"
+#include "../include/tilemap.h"
+#include "../include/levels.h"
 
 int main() {
 
