@@ -19,6 +19,7 @@ void DrawTileMap(TileMap *tilemap)
         for (int x = 0; x < tilemap->width; x++)
         {
             int tile_id = tilemap->tiles[y * tilemap->width + x];
+            if (tile_id == TILE_CODE_BORDER) continue;
 
             Rectangle source = {
                 tile_id * TILE_SIZE,
@@ -52,7 +53,9 @@ bool CheckCollisionWithMap(TileMap *tilemap, Rectangle playerRect)
     {
         for (int x = 0; x < tilemap->width; x++)
         {
-            if (tilemap->tiles[y * tilemap->width + x] != 1)
+            int tile_code = tilemap->tiles[y * tilemap->width + x];
+            if (tile_code != TILE_CODE_WATER &&
+                tile_code != TILE_CODE_BORDER)
                 continue;
 
             Rectangle tileRect = {
