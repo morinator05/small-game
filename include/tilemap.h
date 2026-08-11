@@ -8,6 +8,9 @@
 
 #define TILE_SIZE 16
 
+#define TILE_CODE_WATER 1
+#define TILE_CODE_BORDER (-1)
+
 typedef struct {
     int width;
     int height;
