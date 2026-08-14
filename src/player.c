@@ -3,6 +3,9 @@
 //
 
 #include "../include/player.h"
+
+#include <stdio.h>
+
 #include "../include/tilemap.h"
 #include "raymath.h"
 
@@ -23,7 +26,7 @@ void CreatePlayer(Player* player, Texture2D texture)
         .first = 0,
         .last = 3,
         .current = 0,
-        .speed = .1f,
+        .speed = .2f,
         .time_left = 0
     };
 }
@@ -36,60 +39,78 @@ void MovePlayer(Player* player, TileMap* tilemap)
 
     Vector2 new_position = player->position;
     Vector2 move_vector = {0, 0};
-
-    //Direction Info for Animation
-    static Direction last_direction = DIRECTION_IDLE;
-    Direction new_direction = last_direction;
-    SetRow(&player->sprite.anim, TEXTURE_PLAYER_ROW_IDLE, player->sprite.frames_per_line);
+    Direction current_direction = IDLE;
 
     //Get the input
     if (IsKeyDown(KEY_W))
     {
         move_vector.y -= distance;
-        SetRow(&player->sprite.anim, TEXTURE_PLAYER_ROW_UP, player->sprite.frames_per_line);
-        new_direction = DIRECTION_UP;
+        current_direction = UP;
     }
     if (IsKeyDown(KEY_S))
     {
         move_vector.y += distance;
-        SetRow(&player->sprite.anim, TEXTURE_PLAYER_ROW_DOWN, player->sprite.frames_per_line);
-        new_direction = DIRECTION_DOWN;
+        current_direction = DOWN;
     }
     if (IsKeyDown(KEY_A))
     {
         move_vector.x -= distance;
-        SetRow(&player->sprite.anim, TEXTURE_PLAYER_ROW_LEFT, player->sprite.frames_per_line);
-        new_direction = DIRECTION_LEFT;
+        current_direction = LEFT;
     }
     if (IsKeyDown(KEY_D))
     {
         move_vector.x += distance;
-        SetRow(&player->sprite.anim, TEXTURE_PLAYER_ROW_RIGHT, player->sprite.frames_per_line);
-        new_direction = DIRECTION_RIGHT;
+        current_direction = RIGHT;
     }
 
     //Normalize and scale the vector for propper speed when moving diagonally
-    move_vector = Vector2Normalize(move_vector);
-    move_vector = Vector2Scale(move_vector, distance);
-
-    //Check if the x part of the Movement is allowed
-    new_position.x = new_position.x += move_vector.x;
-    if (!CheckCollisionWithMap(tilemap, (Rectangle){new_position.x, new_position.y,TILE_SIZE,TILE_SIZE}))
+    if (current_direction != IDLE)
     {
-        player->position.x += move_vector.x;
+        move_vector = Vector2Normalize(move_vector);
+        move_vector = Vector2Scale(move_vector, distance);
     }
-    new_position.x = player->position.x;
+    float length = Vector2Length(move_vector);
+    DrawText(TextFormat("Speed: %.2f", length), 0, 20, 20, WHITE);
 
-    //Check if the y part of the Movement is allowed
-    new_position.y = new_position.y += move_vector.y;
-    if (!CheckCollisionWithMap(tilemap, (Rectangle){new_position.x, new_position.y,TILE_SIZE,TILE_SIZE}))
+    if (length > 0.01f)
     {
-        player->position.y += move_vector.y;
+        //Check if the x part of the Movement is allowed
+        new_position.x += move_vector.x;
+        if (!CheckCollisionWithMap(tilemap, (Rectangle){new_position.x, new_position.y,TILE_SIZE,TILE_SIZE}))
+        {
+            player->position.x += move_vector.x;
+        }
+        new_position.x = player->position.x;
+
+        //Check if the y part of the Movement is allowed
+        new_position.y += move_vector.y;
+        if (!CheckCollisionWithMap(tilemap, (Rectangle){new_position.x, new_position.y,TILE_SIZE,TILE_SIZE}))
+        {
+            player->position.y += move_vector.y;
+        }
+    }
+    else
+    {
+        current_direction = IDLE;
     }
 
-    if (new_direction != last_direction)
+    switch (current_direction)
     {
-        last_direction = new_direction;
+    case UP: SetRow(&player->sprite.anim, TEXTURE_PLAYER_ROW_UP, player->sprite.frames_per_line);
+        break;
+    case DOWN: SetRow(&player->sprite.anim, TEXTURE_PLAYER_ROW_DOWN, player->sprite.frames_per_line);
+        break;
+    case LEFT: SetRow(&player->sprite.anim, TEXTURE_PLAYER_ROW_LEFT, player->sprite.frames_per_line);
+        break;
+    case RIGHT: SetRow(&player->sprite.anim, TEXTURE_PLAYER_ROW_RIGHT, player->sprite.frames_per_line);
+        break;
+    case IDLE: SetRow(&player->sprite.anim, TEXTURE_PLAYER_ROW_IDLE, player->sprite.frames_per_line);
+        break;
+    }
+
+    if (player->current_direction != current_direction)
+    {
         Reset(&player->sprite.anim);
+        player->current_direction = current_direction;
     }
 }

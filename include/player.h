@@ -15,11 +15,11 @@
 
 typedef enum
 {
-    DIRECTION_UP,
-    DIRECTION_DOWN,
-    DIRECTION_LEFT,
-    DIRECTION_RIGHT,
-    DIRECTION_IDLE,
+    UP,
+    DOWN,
+    LEFT,
+    RIGHT,
+    IDLE,
 } Direction;
 
 typedef struct
@@ -27,6 +27,7 @@ typedef struct
     Sprite sprite;
     Vector2 position;
     int velocity;
+    Direction current_direction;
 } Player;
 
 void CreatePlayer(Player* player, Texture2D texture);
