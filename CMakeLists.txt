@@ -13,7 +13,9 @@ add_executable(testgame2 src/main.c
         include/assets.h
         src/assets.c
         src/levels.c
-        include/levels.h)
+        include/levels.h
+        include/animation.h
+        src/animation.c)
 
 target_link_libraries(testgame2 raylib)
 

@@ -8,8 +8,12 @@
 
 #define TILE_SIZE 16
 
-#define TILE_CODE_WATER 1
 #define TILE_CODE_BORDER (-1)
+#define TILE_CODE_DIRT 0
+#define TILE_CODE_WATER 1
+#define TILE_CODE_SAND 2
+#define TILE_CODE_GRASS 3
+
 
 typedef struct {
     int width;

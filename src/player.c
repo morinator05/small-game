@@ -12,55 +12,51 @@ void DrawPlayer(Player *player) {
 
 void CreatePlayer(Player *player, Texture2D texture) {
     player->sprite.texture = texture;
-    player->sprite.source = (Rectangle){0, 0, 16, 16};
     player->sprite.origin = (Vector2){0, 0};
     player->sprite.rotation = 0;
     player->position = (Vector2){0, 0};
     player->velocity = 22;
-    player->animationTimer = .0f;
-    player->currentFrame = 0;
+    player->sprite.frames_per_line = 4;
+    player->sprite.anim = (Animation) {
+        .first = 0,
+        .last = 3,
+        .current = 0,
+        .speed = .1f,
+        .time_left = 0
+    };
 }
 
 void MovePlayer(Player *player, TileMap *tilemap) {
-    bool moving = false;
     float distance = player->velocity * GetFrameTime();
     distance = IsKeyDown(KEY_LEFT_SHIFT) ? 2 * distance : distance;
     Vector2 new_position = player->position;
+    static Direction last_direction = DIRECTION_DOWN;
+    Direction new_direction = last_direction;
 
+    //TODO: fix vertical movement speed
+    //TODO: split x and y movement
+
+    SetRow(&player->sprite.anim, TEXTURE_PLAYER_ROW_IDLE, player->sprite.frames_per_line);
     if (IsKeyDown(KEY_W)) {
         new_position.y -= distance;
-        moving = true;
-        SetDirection(player, DIRECTION_UP);
+        SetRow(&player->sprite.anim, TEXTURE_PLAYER_ROW_UP, player->sprite.frames_per_line);
+        new_direction = DIRECTION_UP;
     }
     if (IsKeyDown(KEY_S)) {
         new_position.y += distance;
-        moving = true;
-        SetDirection(player, DIRECTION_DOWN);
+        SetRow(&player->sprite.anim, TEXTURE_PLAYER_ROW_DOWN, player->sprite.frames_per_line);
+        new_direction = DIRECTION_DOWN;
     }
     if (IsKeyDown(KEY_A)) {
         new_position.x -= distance;
-        moving = true;
-        SetDirection(player, DIRECTION_LEFT);
+        SetRow(&player->sprite.anim, TEXTURE_PLAYER_ROW_LEFT, player->sprite.frames_per_line);
+        new_direction = DIRECTION_LEFT;
     }
     if (IsKeyDown(KEY_D)) {
         new_position.x += distance;
-        moving = true;
-        SetDirection(player, DIRECTION_RIGHT);
+        SetRow(&player->sprite.anim, TEXTURE_PLAYER_ROW_RIGHT, player->sprite.frames_per_line);
+        new_direction = DIRECTION_RIGHT;
     }
-
-    if (moving) {
-        player->animationTimer += GetFrameTime();
-        if (player->animationTimer >= 0.15f) {
-            player->currentFrame++;
-            player->currentFrame %= 4;
-
-            player->animationTimer = 0.0f;
-        }
-    } else {
-        player->currentFrame = 0; // Idle
-    }
-
-    player->sprite.source.x = player->currentFrame * TILE_SIZE;
 
     Rectangle playerRect = {
         new_position.x,
@@ -72,24 +68,11 @@ void MovePlayer(Player *player, TileMap *tilemap) {
     if (!CheckCollisionWithMap(tilemap, playerRect)) {
         player->position = new_position;
     }
-}
 
-void SetDirection(Player *player, Direction direction) {
-    switch (direction) {
-        case DIRECTION_DOWN:
-            player->sprite.source.y = 0;
-            break;
-
-        case DIRECTION_UP:
-            player->sprite.source.y = 16;
-            break;
-
-        case DIRECTION_LEFT:
-            player->sprite.source.y = 32;
-            break;
-
-        case DIRECTION_RIGHT:
-            player->sprite.source.y = 48;
-            break;
+    if (new_direction != last_direction)
+    {
+        last_direction = new_direction;
+        Reset(&player->sprite.anim);
     }
+
 }
