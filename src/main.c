@@ -42,6 +42,7 @@ int main()
         BeginDrawing();
         BeginMode2D(camera);
 
+
         ClearBackground(BLACK);
         DrawTileMap(&level);
         DrawPlayer(&player);
@@ -50,6 +51,7 @@ int main()
 
         MovePlayer(&player, &level);
 
+        DrawText(TextFormat("FPS: %d", GetFPS()), 0, 0, 20, WHITE);
         EndDrawing();
 
         console_log_update += GetFrameTime();
