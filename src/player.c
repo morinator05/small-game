@@ -30,13 +30,15 @@ void MovePlayer(Player *player, TileMap *tilemap) {
     float distance = player->velocity * GetFrameTime();
     distance = IsKeyDown(KEY_LEFT_SHIFT) ? 2 * distance : distance;
     Vector2 new_position = player->position;
-    static Direction last_direction = DIRECTION_DOWN;
+    static Direction last_direction = DIRECTION_IDLE;
     Direction new_direction = last_direction;
 
     //TODO: fix vertical movement speed
     //TODO: split x and y movement
 
     SetRow(&player->sprite.anim, TEXTURE_PLAYER_ROW_IDLE, player->sprite.frames_per_line);
+    new_direction = DIRECTION_IDLE;
+
     if (IsKeyDown(KEY_W)) {
         new_position.y -= distance;
         SetRow(&player->sprite.anim, TEXTURE_PLAYER_ROW_UP, player->sprite.frames_per_line);

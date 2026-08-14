@@ -15,7 +15,6 @@ typedef struct {
     int frames_per_line;
     Vector2 origin;
     float rotation;
-    float velocity;
     Animation anim;
 } Sprite;
 
