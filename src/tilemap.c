@@ -64,11 +64,10 @@ bool CheckCollisionWithMap(TileMap *tilemap, Rectangle playerRect)
                 TILE_SIZE,
                 TILE_SIZE
             };
-
             Rectangle playerCollision = {
                 playerRect.x + PLAYER_MARGIN,
                 playerRect.y + PLAYER_MARGIN,
-                playerRect.width - (2 * PLAYER_MARGIN),
+                playerRect.width - 2 * PLAYER_MARGIN,
                 playerRect.height - PLAYER_MARGIN
             };
 
@@ -76,6 +75,5 @@ bool CheckCollisionWithMap(TileMap *tilemap, Rectangle playerRect)
                 return true;
         }
     }
-
     return false;
 }

@@ -5,7 +5,10 @@
 #include <raylib.h>
 #include "../include/sprite.h"
 
-void DrawSprite(Sprite *sprite, Vector2 position) {
+void DrawSprite(Sprite *sprite, Vector2 position){
+
+    UpdateAnimation(&sprite->anim);
+
     Rectangle destination = {
         position.x,
         position.y,
@@ -15,7 +18,7 @@ void DrawSprite(Sprite *sprite, Vector2 position) {
 
     DrawTexturePro(
         sprite->texture,
-        sprite->source,
+        GetCurrentFrame(&sprite->anim, sprite->frames_per_line),
         destination,
         sprite->origin,
         sprite->rotation,
