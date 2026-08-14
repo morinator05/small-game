@@ -6,8 +6,8 @@
 #include "../include/tilemap.h"
 #include "../include/levels.h"
 
-int main() {
-
+int main()
+{
     //Innit the Window
     InitWindow(1280, 920, "test");
     SetTargetFPS(GetMonitorRefreshRate(0));
@@ -19,7 +19,7 @@ int main() {
     //create a player
     Player player;
     CreatePlayer(&player, assets.player);
-    player.position = (Vector2) {40.f, 20.f};
+    player.position = (Vector2){40.f, 20.f};
 
     TileMap level;
     CreateLevel1(&level, assets);
@@ -36,7 +36,8 @@ int main() {
     float console_log_threshold = 1.0f;
     float console_log_update = .0f;
 
-    while (!WindowShouldClose()) {
+    while (!WindowShouldClose())
+    {
         camera.target = player.position;
         BeginDrawing();
         BeginMode2D(camera);
@@ -58,6 +59,6 @@ int main() {
             printf("Position of player: {x:%2f, y:%2f}\n", player.position.x, player.position.y);
         }
     }
-        UnloadAssets(&assets);
-        CloseWindow();
+    UnloadAssets(&assets);
+    CloseWindow();
 }

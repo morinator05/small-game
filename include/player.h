@@ -13,15 +13,17 @@
 #define TEXTURE_PLAYER_ROW_LEFT 3
 #define TEXTURE_PLAYER_ROW_RIGHT 4
 
-typedef enum {
+typedef enum
+{
     DIRECTION_UP,
     DIRECTION_DOWN,
     DIRECTION_LEFT,
     DIRECTION_RIGHT,
     DIRECTION_IDLE,
-}Direction;
+} Direction;
 
-typedef struct {
+typedef struct
+{
     Sprite sprite;
     Vector2 position;
     int velocity;

@@ -8,20 +8,20 @@
 
 typedef struct
 {
-   int first;
-   int last;
-   int current;
+    int first;
+    int last;
+    int current;
 
-   float speed;
-   float time_left;
-}Animation;
+    float speed;
+    float time_left;
+} Animation;
 
-void SetRow(Animation * anim, int row, int frames_per_row);
+void SetRow(Animation* anim, int row, int frames_per_row);
 
-void Reset(Animation *anim);
+void Reset(Animation* anim);
 
-void UpdateAnimation(Animation *animation);
+void UpdateAnimation(Animation* animation);
 
-Rectangle GetCurrentFrame(Animation *animation, int frames_per_row);
+Rectangle GetCurrentFrame(Animation* animation, int frames_per_row);
 
 #endif //TESTGAME2_ANIMATION_H

@@ -4,7 +4,7 @@
 
 #include "../include/animation.h"
 
-void UpdateAnimation(Animation *animation)
+void UpdateAnimation(Animation* animation)
 {
     float delta = GetFrameTime();
     animation->time_left -= delta;
@@ -21,12 +21,12 @@ void UpdateAnimation(Animation *animation)
     }
 }
 
-Rectangle GetCurrentFrame(Animation *animation, int frames_per_row)
+Rectangle GetCurrentFrame(Animation* animation, int frames_per_row)
 {
     float x = (animation->current % frames_per_row) * 16;
     float y = (animation->current / frames_per_row) * 16;
 
-    return (Rectangle) {
+    return (Rectangle){
         .x = x,
         .y = y,
         .width = 16,
@@ -35,13 +35,13 @@ Rectangle GetCurrentFrame(Animation *animation, int frames_per_row)
 }
 
 
-void SetRow(Animation * anim, int row, int frames_per_row)
+void SetRow(Animation* anim, int row, int frames_per_row)
 {
     anim->first = row * frames_per_row;
     anim->last = anim->first + frames_per_row - 1;
 }
 
-void Reset(Animation * anim)
+void Reset(Animation* anim)
 {
-    anim-> current = anim->first;
+    anim->current = anim->first;
 }

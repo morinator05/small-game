@@ -6,10 +6,11 @@
 #define TESTGAME2_ASSETS_H
 #include <raylib.h>
 
-typedef struct {
+typedef struct
+{
     Texture2D player;
     Texture2D worldDefault;
-}Assets;
+} Assets;
 
 void LoadAssets(Assets* assets);
 void UnloadAssets(Assets* assets);

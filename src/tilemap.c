@@ -9,10 +9,11 @@
 
 #define PLAYER_MARGIN 4
 
-void DestroyTileMap(TileMap *tilemap) {
+void DestroyTileMap(TileMap* tilemap)
+{
 }
 
-void DrawTileMap(TileMap *tilemap)
+void DrawTileMap(TileMap* tilemap)
 {
     for (int y = 0; y < tilemap->height; y++)
     {
@@ -39,7 +40,7 @@ void DrawTileMap(TileMap *tilemap)
                 tilemap->tileset,
                 source,
                 dest,
-                (Vector2){0,0},
+                (Vector2){0, 0},
                 0,
                 WHITE
             );
@@ -47,7 +48,7 @@ void DrawTileMap(TileMap *tilemap)
     }
 }
 
-bool CheckCollisionWithMap(TileMap *tilemap, Rectangle playerRect)
+bool CheckCollisionWithMap(TileMap* tilemap, Rectangle playerRect)
 {
     for (int y = 0; y < tilemap->height; y++)
     {

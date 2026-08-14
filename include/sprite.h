@@ -10,7 +10,8 @@
 
 #define TILE_SIZE 16
 
-typedef struct {
+typedef struct
+{
     Texture2D texture;
     int frames_per_line;
     Vector2 origin;
@@ -18,7 +19,7 @@ typedef struct {
     Animation anim;
 } Sprite;
 
-void DrawSprite(Sprite *sprite, Vector2 position);
-void UnloadSprite(Sprite *sprite);
+void DrawSprite(Sprite* sprite, Vector2 position);
+void UnloadSprite(Sprite* sprite);
 
 #endif //TESTGAME2_SPRITE_H
