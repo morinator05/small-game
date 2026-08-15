@@ -55,8 +55,9 @@ int main()
         EndMode2D();
 
         DrawText(TextFormat("FPS: %d", GetFPS()), 0, 0, 18, WHITE);
-        DrawText(TextFormat("Position of player: {x:%3f, y:%3f}", player.position.x, player.position.y), 0,20,18,WHITE);
-        DrawText(TextFormat("Distance: %3f}", Vector2Distance(player.position, enemy.position)), 0,40,18,WHITE);
+        DrawText(TextFormat("Position of player: {x:%3f, y:%3f}", player.position.x, player.position.y), 0, 20, 18,
+                 WHITE);
+        DrawText(TextFormat("Distance: %3f}", Vector2Distance(player.position, enemy.position)), 0, 40, 18,WHITE);
 
         EndDrawing();
     }
