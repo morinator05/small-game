@@ -15,8 +15,10 @@ add_executable(testgame2 src/main.c
         src/levels.c
         include/levels.h
         include/animation.h
-        src/animation.c)
+        src/animation.c
+        include/enemy.h
+        src/enemy.c)
 
-target_link_libraries(testgame2 raylib)
+target_link_libraries(testgame2 raylib m)
 
 file(COPY asset DESTINATION ${CMAKE_BINARY_DIR})
