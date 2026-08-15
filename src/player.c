@@ -4,10 +4,9 @@
 
 #include "../include/player.h"
 
-#include <stdio.h>
-
 #include "../include/tilemap.h"
 #include "raymath.h"
+#include "../include/assets.h"
 
 void DrawPlayer(Player* player)
 {
@@ -21,7 +20,7 @@ void CreatePlayer(Player* player, Texture2D texture)
     player->sprite.rotation = 0;
     player->position = (Vector2){0, 0};
     player->velocity = 22;
-    player->sprite.frames_per_line = 4;
+    player->sprite.frames_per_line = FRAMES_PER_LINE;
     player->sprite.anim = (Animation){
         .first = 0,
         .last = 3,
@@ -29,6 +28,7 @@ void CreatePlayer(Player* player, Texture2D texture)
         .speed = .2f,
         .time_left = 0
     };
+    player->hp = 1000.0f;
 }
 
 void MovePlayer(Player* player, TileMap* tilemap)
