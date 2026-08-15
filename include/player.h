@@ -7,26 +7,31 @@
 #include "sprite.h"
 #include "tilemap.h"
 
+#define   TEXTURE_PLAYER_ROW_IDLE 0
+#define TEXTURE_PLAYER_ROW_DOWN 1
+#define TEXTURE_PLAYER_ROW_UP 2
+#define TEXTURE_PLAYER_ROW_LEFT 3
+#define TEXTURE_PLAYER_ROW_RIGHT 4
 
-typedef enum {
-    DIRECTION_UP,
-    DIRECTION_DOWN,
-    DIRECTION_LEFT,
-    DIRECTION_RIGHT,
-}Direction;
+typedef enum
+{
+    UP,
+    DOWN,
+    LEFT,
+    RIGHT,
+    IDLE,
+} Direction;
 
-typedef struct {
+typedef struct
+{
     Sprite sprite;
     Vector2 position;
     int velocity;
-    Rectangle frameRectangle;
-    int currentFrame;
-    float animationTimer;
+    Direction current_direction;
 } Player;
 
 void CreatePlayer(Player* player, Texture2D texture);
 void DrawPlayer(Player* player);
 void MovePlayer(Player* player, TileMap* tilemap);
-void SetDirection(Player* player, Direction direction);
 
 #endif //TESTGAME2_PLAYER_H
