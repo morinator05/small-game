@@ -9,13 +9,13 @@
 #include <stdio.h>
 #include <stdlib.h>
 
-void CreateEnemy(Enemy* enemy, Texture2D texture)
+void CreateRedSlime(Enemy* enemy, Texture2D texture)
 {
     Animation enemy_anim = (Animation){
         .first = 0,
         .last = 3,
         .current = 0,
-        .speed = 0.2f,
+        .speed = 0.4f,
         .time_left = 0
     };
 
@@ -31,13 +31,14 @@ void CreateEnemy(Enemy* enemy, Texture2D texture)
         .sprite = enemy_sprite,
         .position = {100, 100},
         .hp = 100,
-        .velocity = 18,
+        .velocity = 10,
         .angry = false,
-        .trigger_radius = 80
+        .trigger_radius = 50,
+        .hit_radius = 10
     };
 }
 
-void UpdateEnemy(Enemy* enemy, TileMap* map, const Player* player)
+void UpdateRedSlime(Enemy* enemy, TileMap* map, const Player* player)
 {
     UpdateAnimation(&enemy->sprite.anim);
 
@@ -65,11 +66,26 @@ void UpdateEnemy(Enemy* enemy, TileMap* map, const Player* player)
         {
             enemy->position.y = new_position.y;
         }
+
+        if (Vector2Distance(player->position, enemy->position) <= enemy-> hit_radius)
+        {
+            printf("Hit");
+        }
+
     }
     else
     {
         enemy->angry = false;
     }
+
+    if (!enemy->angry)
+    {
+        SetRow(&enemy->sprite.anim, TEXTURE_ENEMY_ROW_IDLE, enemy->sprite.frames_per_line);
+    } else
+    {
+        SetRow(&enemy->sprite.anim, TEXTURE_ENEMY_ROW_ANGRY, enemy->sprite.frames_per_line);
+    }
+
 }
 
 void DrawEnemy(Enemy* enemy)
