@@ -27,7 +27,7 @@ int main()
     CreateLevel1(&level, assets);
 
     Enemy enemy;
-    CreateEnemy(&enemy, assets.redSlime);
+    CreateRedSlime(&enemy, assets.redSlime);
 
     Camera2D camera = {0};
     camera.target = player.position;
@@ -38,17 +38,15 @@ int main()
         GetScreenHeight() / 2.0f
     };
 
-    float console_log_threshold = 1.0f;
-    float console_log_update = .0f;
-
     while (!WindowShouldClose())
     {
         camera.target = player.position;
         MovePlayer(&player, &level);
-        UpdateEnemy(&enemy, &level, &player);
+        UpdateRedSlime(&enemy, &level, &player);
 
         BeginDrawing();
 
+        UpdateRedSlime(&enemy, &level, &player);
         BeginMode2D(camera);
         ClearBackground(BLACK);
         DrawTileMap(&level);
@@ -56,19 +54,13 @@ int main()
         DrawEnemy(&enemy);
         EndMode2D();
 
-        DrawText(TextFormat("FPS: %d", GetFPS()), 0, 0, 20, WHITE);
+        DrawText(TextFormat("FPS: %d", GetFPS()), 0, 0, 18, WHITE);
+        DrawText(TextFormat("Position of player: {x:%3f, y:%3f}", player.position.x, player.position.y), 0,20,18,WHITE);
+        DrawText(TextFormat("Distance: %3f}", Vector2Distance(player.position, enemy.position)), 0,40,18,WHITE);
 
         EndDrawing();
-
-        console_log_update += GetFrameTime();
-        if (console_log_update > console_log_threshold)
-        {
-            console_log_update = .0f;
-            printf("Position of player: {x:%2f, y:%2f}\n", player.position.x, player.position.y);
-            printf("Position of enemy: {x:%2f, y:%2f}\n", enemy.position.x, enemy.position.y);
-            printf("Distance: %2f\n", Vector2Distance(enemy.position, player.position));
-        }
     }
+
     UnloadAssets(&assets);
     CloseWindow();
 }

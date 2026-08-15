@@ -7,6 +7,9 @@
 #include "player.h"
 #include "sprite.h"
 
+#define   TEXTURE_ENEMY_ROW_IDLE 0
+#define TEXTURE_ENEMY_ROW_ANGRY 1
+
 typedef struct
 {
     Sprite sprite;
@@ -15,10 +18,11 @@ typedef struct
     int velocity;
     bool angry;
     float trigger_radius;
+    float hit_radius;
 }Enemy;
 
-void CreateEnemy(Enemy* enemy, Texture2D texture);
-void UpdateEnemy(Enemy* enemy, TileMap* map, const Player* player);
+void CreateRedSlime(Enemy* enemy, Texture2D texture);
+void UpdateRedSlime(Enemy* enemy, TileMap* map, const Player* player);
 void DrawEnemy(Enemy* enemy);
 
 #endif //TESTGAME2_ENEMY_H
