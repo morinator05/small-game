@@ -10,6 +10,7 @@ typedef struct
 {
     Texture2D player;
     Texture2D worldDefault;
+    Texture2D redSlime;
 } Assets;
 
 void LoadAssets(Assets* assets);

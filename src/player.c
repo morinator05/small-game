@@ -70,9 +70,8 @@ void MovePlayer(Player* player, TileMap* tilemap)
         move_vector = Vector2Scale(move_vector, distance);
     }
     float length = Vector2Length(move_vector);
-    DrawText(TextFormat("Speed: %.2f", length), 0, 20, 20, WHITE);
 
-    if (length > 0.01f)
+    if (length > 0.0f)
     {
         //Check if the x part of the Movement is allowed
         new_position.x += move_vector.x;

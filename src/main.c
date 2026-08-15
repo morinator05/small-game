@@ -1,7 +1,9 @@
 #include <raylib.h>
+#include <raymath.h>
 #include <stdio.h>
 
 #include "../include/assets.h"
+#include "../include/enemy.h"
 #include "../include/player.h"
 #include "../include/tilemap.h"
 #include "../include/levels.h"
@@ -24,6 +26,9 @@ int main()
     TileMap level;
     CreateLevel1(&level, assets);
 
+    Enemy enemy;
+    CreateEnemy(&enemy, assets.redSlime);
+
     Camera2D camera = {0};
     camera.target = player.position;
     camera.rotation = 0.0f;
@@ -39,19 +44,20 @@ int main()
     while (!WindowShouldClose())
     {
         camera.target = player.position;
+        MovePlayer(&player, &level);
+        UpdateEnemy(&enemy, &level, &player);
+
         BeginDrawing();
+
         BeginMode2D(camera);
-
-
         ClearBackground(BLACK);
         DrawTileMap(&level);
         DrawPlayer(&player);
-
+        DrawEnemy(&enemy);
         EndMode2D();
 
-        MovePlayer(&player, &level);
-
         DrawText(TextFormat("FPS: %d", GetFPS()), 0, 0, 20, WHITE);
+
         EndDrawing();
 
         console_log_update += GetFrameTime();
@@ -59,6 +65,8 @@ int main()
         {
             console_log_update = .0f;
             printf("Position of player: {x:%2f, y:%2f}\n", player.position.x, player.position.y);
+            printf("Position of enemy: {x:%2f, y:%2f}\n", enemy.position.x, enemy.position.y);
+            printf("Distance: %2f\n", Vector2Distance(enemy.position, player.position));
         }
     }
     UnloadAssets(&assets);
