@@ -19,7 +19,7 @@ typedef struct
     bool angry;
     float trigger_radius;
     float hit_radius;
-}Enemy;
+} Enemy;
 
 void CreateRedSlime(Enemy* enemy, Texture2D texture);
 void UpdateRedSlime(Enemy* enemy, TileMap* map, const Player* player);

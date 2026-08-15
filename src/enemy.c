@@ -50,13 +50,15 @@ void UpdateRedSlime(Enemy* enemy, TileMap* map, const Player* player)
         const Vector2 new_position = Vector2MoveTowards(enemy->position, player->position, distance);
 
         const bool block_x = CheckCollisionWithMap(map, (Rectangle){
-                                                 .x = new_position.x, .y = enemy->position.y, .width = 16, .height = 16
-                                             });
+                                                       .x = new_position.x, .y = enemy->position.y, .width = 16,
+                                                       .height = 16
+                                                   });
 
 
         const bool block_y = CheckCollisionWithMap(map, (Rectangle){
-                                                 .x = enemy->position.x, .y = new_position.y, .width = 16, .height = 16
-                                             });
+                                                       .x = enemy->position.x, .y = new_position.y, .width = 16,
+                                                       .height = 16
+                                                   });
 
         if (!block_x)
         {
@@ -67,11 +69,10 @@ void UpdateRedSlime(Enemy* enemy, TileMap* map, const Player* player)
             enemy->position.y = new_position.y;
         }
 
-        if (Vector2Distance(player->position, enemy->position) <= enemy-> hit_radius)
+        if (Vector2Distance(player->position, enemy->position) <= enemy->hit_radius)
         {
             printf("Hit");
         }
-
     }
     else
     {
@@ -81,11 +82,11 @@ void UpdateRedSlime(Enemy* enemy, TileMap* map, const Player* player)
     if (!enemy->angry)
     {
         SetRow(&enemy->sprite.anim, TEXTURE_ENEMY_ROW_IDLE, enemy->sprite.frames_per_line);
-    } else
+    }
+    else
     {
         SetRow(&enemy->sprite.anim, TEXTURE_ENEMY_ROW_ANGRY, enemy->sprite.frames_per_line);
     }
-
 }
 
 void DrawEnemy(Enemy* enemy)
