@@ -19,10 +19,17 @@ typedef struct
     bool angry;
     float trigger_radius;
     float hit_radius;
+    float hit_rate;
+    float hit_cooldown;
+    int damage_per_hit;
 } Enemy;
 
 void CreateRedSlime(Enemy* enemy, Texture2D texture);
-void UpdateRedSlime(Enemy* enemy, TileMap* map, const Player* player);
+void UpdateRedSlime(Enemy* enemy, TileMap* map, Player* player);
+
+void CreateWiz(Enemy* enemy, Texture2D texture);
+void UpdateWiz(Enemy* enemy, TileMap* map, Player* player);
+
 void DrawEnemy(Enemy* enemy);
 
 #endif //TESTGAME2_ENEMY_H

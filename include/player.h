@@ -27,6 +27,7 @@ typedef struct
     Sprite sprite;
     Vector2 position;
     int velocity;
+    float hp;
     Direction current_direction;
 } Player;
 

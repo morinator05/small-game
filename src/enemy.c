@@ -34,13 +34,20 @@ void CreateRedSlime(Enemy* enemy, Texture2D texture)
         .velocity = 10,
         .angry = false,
         .trigger_radius = 50,
-        .hit_radius = 10
+        .hit_radius = 10,
+        .hit_rate = 5.0f,
+        .hit_cooldown = 0.f,
+        .damage_per_hit = 50
     };
 }
 
-void UpdateRedSlime(Enemy* enemy, TileMap* map, const Player* player)
+void UpdateRedSlime(Enemy* enemy, TileMap* map, Player* player)
 {
     UpdateAnimation(&enemy->sprite.anim);
+
+    //Update Hit Cooldownd
+    enemy->hit_cooldown -= GetFrameTime();
+    if (enemy->hit_cooldown < 0) enemy->hit_cooldown = 0;
 
     const float distance_to_player = Vector2Distance(enemy->position, player->position);
     if (distance_to_player <= enemy->trigger_radius)
@@ -69,9 +76,10 @@ void UpdateRedSlime(Enemy* enemy, TileMap* map, const Player* player)
             enemy->position.y = new_position.y;
         }
 
-        if (Vector2Distance(player->position, enemy->position) <= enemy->hit_radius)
+        if (Vector2Distance(player->position, enemy->position) <= enemy->hit_radius && enemy->hit_cooldown <= 0)
         {
-            printf("Hit");
+            player->hp -= enemy->damage_per_hit;
+            enemy->hit_cooldown = enemy->hit_rate;
         }
     }
     else
@@ -87,6 +95,42 @@ void UpdateRedSlime(Enemy* enemy, TileMap* map, const Player* player)
     {
         SetRow(&enemy->sprite.anim, TEXTURE_ENEMY_ROW_ANGRY, enemy->sprite.frames_per_line);
     }
+}
+
+void CreateWiz(Enemy* enemy, Texture2D texture)
+{
+    Animation enemy_anim = (Animation){
+        .first = 0,
+        .last = 0,
+        .current = 0,
+        .speed = 0.4f,
+        .time_left = 0
+    };
+
+    Sprite enemy_sprite = (Sprite){
+        .texture = texture,
+        .frames_per_line = 4,
+        .origin = {0, 0},
+        .rotation = 0.0f,
+        .anim = enemy_anim
+    };
+
+    *enemy = (Enemy){
+        .sprite = enemy_sprite,
+        .position = {300, 100},
+        .hp = 100,
+        .velocity = 10,
+        .angry = false,
+        .trigger_radius = 50,
+        .hit_radius = 10,
+        .hit_rate = 5.0f,
+        .hit_cooldown = 0.f,
+        .damage_per_hit = 50
+    };
+}
+void UpdateWiz(Enemy* enemy, TileMap* map, Player* player)
+{
+
 }
 
 void DrawEnemy(Enemy* enemy)
