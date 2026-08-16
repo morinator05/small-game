@@ -10,8 +10,15 @@
 #define   TEXTURE_ENEMY_ROW_IDLE 0
 #define TEXTURE_ENEMY_ROW_ANGRY 1
 
+typedef enum
+{
+    RED_SLIME,
+    WIZ,
+}Type;
+
 typedef struct
 {
+    Type type;
     Sprite sprite;
     Vector2 position;
     int hp;
@@ -30,6 +37,7 @@ void UpdateRedSlime(Enemy* enemy, TileMap* map, Player* player);
 void CreateWiz(Enemy* enemy, Texture2D texture);
 void UpdateWiz(Enemy* enemy, TileMap* map, Player* player);
 
+void UpdateEnemy(Enemy* enemy, TileMap* map, Player* player );
 void DrawEnemy(Enemy* enemy);
 
 #endif //TESTGAME2_ENEMY_H

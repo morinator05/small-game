@@ -6,8 +6,6 @@
 #include "../include/enemy.h"
 
 #include <raymath.h>
-#include <stdio.h>
-#include <stdlib.h>
 
 void CreateRedSlime(Enemy* enemy, Texture2D texture)
 {
@@ -28,12 +26,13 @@ void CreateRedSlime(Enemy* enemy, Texture2D texture)
     };
 
     *enemy = (Enemy){
+        .type = RED_SLIME,
         .sprite = enemy_sprite,
-        .position = {100, 100},
+        .position = {0, 0},
         .hp = 100,
         .velocity = 10,
         .angry = false,
-        .trigger_radius = 50,
+        .trigger_radius = 100,
         .hit_radius = 10,
         .hit_rate = 5.0f,
         .hit_cooldown = 0.f,
@@ -116,6 +115,7 @@ void CreateWiz(Enemy* enemy, Texture2D texture)
     };
 
     *enemy = (Enemy){
+        .type = RED_SLIME,
         .sprite = enemy_sprite,
         .position = {300, 100},
         .hp = 100,
@@ -128,9 +128,20 @@ void CreateWiz(Enemy* enemy, Texture2D texture)
         .damage_per_hit = 50
     };
 }
+
 void UpdateWiz(Enemy* enemy, TileMap* map, Player* player)
 {
+}
 
+void UpdateEnemy(Enemy* enemy, TileMap* map, Player* player)
+{
+    switch (enemy->type)
+    {
+    case RED_SLIME: UpdateRedSlime(enemy, map, player);
+        break;
+    case WIZ: UpdateWiz(enemy, map, player);
+        break;
+    }
 }
 
 void DrawEnemy(Enemy* enemy)
