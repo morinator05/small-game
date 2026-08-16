@@ -1,12 +1,11 @@
 #include <raylib.h>
-#include <raymath.h>
-#include <stdio.h>
 
 #include "../include/assets.h"
 #include "../include/enemy.h"
 #include "../include/player.h"
 #include "../include/tilemap.h"
 #include "../include/levels.h"
+#include "../include/world.h"
 
 #define RAYGUI_IMPLEMENTATION
 #include "../include/raygui.h"
@@ -33,6 +32,14 @@ int main()
     CreateRedSlime(&enemy, assets.redSlime);
     enemy.position = (Vector2) {100,100};
 
+    World world;
+    CreateWorld(&world, 0, level);
+    AddEnemyToWorld(&world, enemy);
+    enemy.position = (Vector2) {100,200};
+    AddEnemyToWorld(&world, enemy);
+    enemy.position = (Vector2) {400,200};
+    AddEnemyToWorld(&world, enemy);
+
     Camera2D camera = {0};
     camera.target = player.position;
     camera.rotation = 0.0f;
@@ -45,20 +52,18 @@ int main()
     while (!WindowShouldClose())
     {
         camera.target = player.position;
-        MovePlayer(&player, &level);
-        UpdateEnemy(&enemy, &level, &player);
+        MovePlayer(&player, &world.map);
+        UpdateWorld(&world, &player);
 
         BeginDrawing();
 
         BeginMode2D(camera);
         ClearBackground(BLACK);
-        DrawTileMap(&level);
+        DrawWorld(&world);
         DrawPlayer(&player);
-        DrawEnemy(&enemy);
         EndMode2D();
 
         DrawText(TextFormat("FPS: %d", GetFPS()), GetScreenWidth() / 2 - 40, 0, 20, WHITE);
-
         GuiProgressBar((Rectangle) {0,0,150, 25}, "0", "max", &player.hp , 0, 1000);
 
         EndDrawing();
