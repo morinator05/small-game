@@ -14,7 +14,7 @@
 int main()
 {
     //Innit the Window
-    InitWindow(1280, 920, "test");
+    InitWindow(GetMonitorWidth(0), GetMonitorHeight(0) , "Yet Another 2D Adventure Game");
     SetTargetFPS(GetMonitorRefreshRate(0));
 
     //Load the assets
@@ -29,11 +29,9 @@ int main()
     TileMap level;
     CreateLevel1(&level, assets);
 
-    Enemy enemy[3];
-    CreateRedSlime(enemy, assets.redSlime);
-    CreateRedSlime(enemy + 1, assets.redSlime);
-    CreateWiz(enemy + 2, assets.darkWiz);
-    (enemy + 1)->position = (Vector2) {20, 20};
+    Enemy enemy;
+    CreateRedSlime(&enemy, assets.redSlime);
+    enemy.position = (Vector2) {100,100};
 
     Camera2D camera = {0};
     camera.target = player.position;
@@ -48,27 +46,18 @@ int main()
     {
         camera.target = player.position;
         MovePlayer(&player, &level);
-        UpdateRedSlime(enemy, &level, &player);
-        UpdateRedSlime(enemy + 1, &level, &player);
+        UpdateEnemy(&enemy, &level, &player);
 
         BeginDrawing();
 
-        UpdateRedSlime(enemy, &level, &player);
-        UpdateRedSlime(enemy + 1, &level, &player);
         BeginMode2D(camera);
         ClearBackground(BLACK);
         DrawTileMap(&level);
         DrawPlayer(&player);
-        DrawEnemy(enemy);
-        DrawEnemy(enemy + 1);
-        DrawEnemy(enemy + 2);
+        DrawEnemy(&enemy);
         EndMode2D();
 
         DrawText(TextFormat("FPS: %d", GetFPS()), GetScreenWidth() / 2 - 40, 0, 20, WHITE);
-        // DrawText(TextFormat("Position of player: {x:%3f, y:%3f}", player.position.x, player.position.y), 0, 40, 18,
-        //          WHITE);
-        // DrawText(TextFormat("Distance: %3f}", Vector2Distance(player.position, enemy->position)), 0, 60, 18,WHITE);
-        // DrawText(TextFormat("%f", (enemy + 1)->hit_cooldown), 0, 80, 18, WHITE);
 
         GuiProgressBar((Rectangle) {0,0,150, 25}, "0", "max", &player.hp , 0, 1000);
 
