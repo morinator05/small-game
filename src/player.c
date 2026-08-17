@@ -1,7 +1,3 @@
-//
-// Created by mori on 12.07.26.
-//
-
 #include "../include/player.h"
 
 #include "../include/tilemap.h"

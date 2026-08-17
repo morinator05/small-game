@@ -1,7 +1,3 @@
-//
-// Created by mori on 14.08.26.
-//
-
 #ifndef TESTGAME2_ANIMATION_H
 #define TESTGAME2_ANIMATION_H
 #include <raylib.h>

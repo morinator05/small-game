@@ -1,7 +1,3 @@
-//
-// Created by mori on 14.08.26.
-//
-
 #include "../include/animation.h"
 
 void UpdateAnimation(Animation* animation)

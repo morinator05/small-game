@@ -1,7 +1,3 @@
-//
-// Created by mori on 15.08.26.
-//
-
 #ifndef TESTGAME2_ENEMY_H
 #define TESTGAME2_ENEMY_H
 #include "player.h"

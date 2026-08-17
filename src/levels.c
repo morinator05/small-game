@@ -1,7 +1,3 @@
-//
-// Created by mori on 13.07.26.
-//
-
 #include "../include/assets.h"
 #include "../include/tilemap.h"
 

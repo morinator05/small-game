@@ -1,7 +1,3 @@
-//
-// Created by mori on 12.07.26.
-//
-
 #ifndef TESTGAME2_SPRITE_H
 #define TESTGAME2_SPRITE_H
 #include <raylib.h>

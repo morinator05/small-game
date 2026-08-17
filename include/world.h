@@ -1,7 +1,3 @@
-//
-// Created by mori on 16.08.26.
-//
-
 #ifndef TESTGAME2_WORLD_H
 #define TESTGAME2_WORLD_H
 #include "enemy.h"
