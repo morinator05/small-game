@@ -13,7 +13,7 @@ void DrawPlayer(Player* player)
     DrawSprite(&player->sprite, player->position);
 }
 
-void CreatePlayer(Player* player, Texture2D texture)
+void CreatePlayer(Player* player, const Texture2D texture)
 {
     player->sprite.texture = texture;
     player->sprite.origin = (Vector2){0, 0};
@@ -31,7 +31,7 @@ void CreatePlayer(Player* player, Texture2D texture)
     player->hp = 1000.0f;
 }
 
-void MovePlayer(Player* player, TileMap* tilemap)
+void MovePlayer(Player* player, const TileMap* tilemap)
 {
     //Calculate speed
     float distance = player->velocity * GetFrameTime();

@@ -30,14 +30,10 @@ int main()
 
     Enemy enemy;
     CreateRedSlime(&enemy, assets.redSlime);
-    enemy.position = (Vector2) {100,100};
+    enemy.position = (Vector2) {20,20};
 
     World world;
     CreateWorld(&world, 0, level);
-    AddEnemyToWorld(&world, enemy);
-    enemy.position = (Vector2) {100,200};
-    AddEnemyToWorld(&world, enemy);
-    enemy.position = (Vector2) {400,200};
     AddEnemyToWorld(&world, enemy);
 
     Camera2D camera = {0};
@@ -54,6 +50,7 @@ int main()
         camera.target = player.position;
         MovePlayer(&player, &world.map);
         UpdateWorld(&world, &player);
+        UpdateEditor(&world.map, camera);
 
         BeginDrawing();
 

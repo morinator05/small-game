@@ -6,14 +6,28 @@
 #define TESTGAME2_TILEMAP_H
 #include <raylib.h>
 
+#include "assets.h"
+
 #define TILE_SIZE 16
 
-#define TILE_CODE_BORDER (-1)
-#define TILE_CODE_DIRT 0
-#define TILE_CODE_WATER 1
-#define TILE_CODE_SAND 2
-#define TILE_CODE_GRASS 3
+typedef enum
+{
+    TILE_BORDER = -1,
+    TILE_GRASS = 1,
+    TILE_SAND = 2,
+    TILE_DIRT = 3,
+    TILE_WATER = 4,
 
+}TileCodes;
+
+typedef enum
+{
+    OUTER_CORNER = 0,
+    H_UPPER_LINE = 1,
+    INNER_CORNER = 2,
+    V_LEFT_LINE = 3,
+    SOLID = 4,
+}TileTypeIndex;
 
 typedef struct
 {
@@ -21,11 +35,12 @@ typedef struct
     int height;
     int* tiles;
 
-    Texture2D tileset;
+    Assets assets;
 } TileMap;
 
 void DrawTileMap(TileMap* tilemap);
 void DestroyTileMap(TileMap* tilemap);
-bool CheckCollisionWithMap(TileMap* tilemap, Rectangle playerRect);
+bool CheckCollisionWithMap(const TileMap* tilemap, Rectangle playerRect);
+void UpdateEditor(const TileMap* map, Camera2D camera);
 
 #endif //TESTGAME2_TILEMAP_H
