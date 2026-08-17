@@ -66,7 +66,7 @@ typedef struct
     Assets assets;
 } TileMap;
 
-void DrawTileMap(TileMap* tilemap);
+void DrawTileMap(const TileMap* tilemap);
 void DestroyTileMap(TileMap* tilemap);
 bool CheckCollisionWithMap(const TileMap* tilemap, Rectangle playerRect);
 void UpdateEditor(const TileMap* map, Camera2D camera);

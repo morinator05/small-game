@@ -8,6 +8,7 @@ void DestroyTileMap(TileMap* tilemap)
     //TODO
 }
 
+//Returns 1 if the Tile at the given position is of equal type with the given type.
 static int GetTileBit(const TileMap* tilemap, const int x, const int y, const TileCodes targetType)
 {
     if (x < 0 || x >= tilemap->width || y < 0 || y >= tilemap->height)
@@ -28,18 +29,22 @@ static void DrawTileLayer(const TileMap* tilemap, const TileCodes tile_type_to_d
             int bottom_left  = GetTileBit(tilemap, x - 1, y,     tile_type_to_draw);
             int bottom_right = GetTileBit(tilemap, x,     y,     tile_type_to_draw);
 
+            //create a mask consisting of the bits of each 4 adjacent tiles
             int mask = top_left + (top_right << 1) + (bottom_left << 2) + (bottom_right << 3);
+
+            //nothing to draw there, goto next
             if (mask == 0) continue;
 
-            DualTileTransform t = DUAL_GRID_LOOKUP[mask];
+            //lookup the correct Tile and Rotation
+            const DualTileTransform t = DUAL_GRID_LOOKUP[mask];
 
-            Rectangle src_rec = {
+            //select the correct tile by its index in the tilemap and the coordinate to draw the tile
+            const Rectangle src_rec = {
                 (float)(t.index * TILE_SIZE),
                 0.0f,
                 (float)TILE_SIZE,
                 (float)TILE_SIZE
             };
-
             const Rectangle dest_rec = {
                 x * TILE_SIZE,
                 y * TILE_SIZE,
@@ -47,7 +52,9 @@ static void DrawTileLayer(const TileMap* tilemap, const TileCodes tile_type_to_d
                 (float)TILE_SIZE
             };
 
-            Vector2 origin = { TILE_SIZE / 2.0f, TILE_SIZE / 2.0f };
+            //Set the origin for the rotation to the center of the tile
+            //Also shifts the tile to its intendet position in the dual grid
+            const Vector2 origin = { TILE_SIZE / 2.0f, TILE_SIZE / 2.0f };
 
             DrawTexturePro(
                 texture,
@@ -61,7 +68,7 @@ static void DrawTileLayer(const TileMap* tilemap, const TileCodes tile_type_to_d
     }
 }
 
-void DrawTileMap(TileMap* tilemap)
+void DrawTileMap(const TileMap* tilemap)
 {
     for (int y = 0; y < tilemap->height; y++)
     {
@@ -82,9 +89,9 @@ void DrawTileMap(TileMap* tilemap)
         }
     }
 
+    //Draw the layers from dirt -> water -> ...coming soon
     DrawTileLayer(tilemap, TILE_DIRT, tilemap->assets.tileset_dirt);
     DrawTileLayer(tilemap, TILE_WATER, tilemap->assets.tileset_water);
-
 }
 
 
