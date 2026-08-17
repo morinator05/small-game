@@ -13,7 +13,7 @@
 int main()
 {
     //Innit the Window
-    InitWindow(GetMonitorWidth(0), GetMonitorHeight(0) , "Yet Another 2D Adventure Game");
+    InitWindow(GetMonitorWidth(0), GetMonitorHeight(0), "Yet Another 2D Adventure Game");
     SetTargetFPS(GetMonitorRefreshRate(0));
 
     //Load the assets
@@ -30,7 +30,7 @@ int main()
 
     Enemy enemy;
     CreateRedSlime(&enemy, assets.redSlime);
-    enemy.position = (Vector2) {20,20};
+    enemy.position = (Vector2){20, 20};
 
     World world;
     CreateWorld(&world, 0, level);
@@ -61,7 +61,7 @@ int main()
         EndMode2D();
 
         DrawText(TextFormat("FPS: %d", GetFPS()), GetScreenWidth() / 2 - 40, 0, 20, WHITE);
-        GuiProgressBar((Rectangle) {0,0,150, 25}, "0", "max", &player.hp , 0, 1000);
+        GuiProgressBar((Rectangle){0, 0, 150, 25}, "0", "max", &player.hp, 0, 1000);
 
         EndDrawing();
     }

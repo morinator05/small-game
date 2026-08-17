@@ -7,13 +7,15 @@
 #define MAX_ENEMIES 100
 #define MAX_TRIGGERS 10
 
-typedef struct {
+typedef struct
+{
     Rectangle hitbox;
     int target_world_id;
     Vector2 target_spawn;
 } WorldTrigger;
 
-typedef struct {
+typedef struct
+{
     int id;
     TileMap map;
 
@@ -24,9 +26,9 @@ typedef struct {
     int trigger_count;
 } World;
 
-void CreateWorld(World *world, int id, TileMap map);
-bool AddEnemyToWorld(World *world, Enemy enemy);
-bool AddTriggerToWorld(World *world, Rectangle bounds, int target_world_id, Vector2 target_spawn);
+void CreateWorld(World* world, int id, TileMap map);
+bool AddEnemyToWorld(World* world, Enemy enemy);
+bool AddTriggerToWorld(World* world, Rectangle bounds, int target_world_id, Vector2 target_spawn);
 
-void UpdateWorld(World *world, void *player);
-void DrawWorld(World *world);
+void UpdateWorld(World* world, void* player);
+void DrawWorld(World* world);
