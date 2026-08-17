@@ -6,12 +6,23 @@
 
 typedef struct
 {
-    Texture2D player;
-    Texture2D waterTiles;
-    Texture2D dirtTiles;
-    Texture2D grasTiles;
-    Texture2D redSlime;
-    Texture2D darkWiz;
+    //Tilesets
+    Texture2D tileset_water;
+    Texture2D tileset_dirt;
+    Texture2D tileset_gras;
+
+    //Spritesheets
+    Texture2D spritesheet_player;
+    Texture2D spritesheet_red_slime;
+    Texture2D spritesheet_dark_wiz;
+
+    //Sounds
+    Sound player_walk_gras;
+    Sound player_walk_dirt;
+    Sound player_walk_sand;
+
+    Sound slime_walk;
+    Sound slime_attack;
 } Assets;
 
 void LoadAssets(Assets* assets);

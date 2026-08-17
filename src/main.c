@@ -20,16 +20,16 @@ int main()
     Assets assets;
     LoadAssets(&assets);
 
-    //create a player
+    //create a spritesheet_player
     Player player;
-    CreatePlayer(&player, assets.player);
+    CreatePlayer(&player, assets.spritesheet_player);
     player.position = (Vector2){40.f, 20.f};
 
     TileMap level;
     CreateLevel1(&level, assets);
 
     Enemy enemy;
-    CreateRedSlime(&enemy, assets.redSlime);
+    CreateRedSlime(&enemy, assets.spritesheet_red_slime);
     enemy.position = (Vector2){20, 20};
 
     World world;
