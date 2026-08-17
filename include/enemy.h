@@ -10,7 +10,7 @@ typedef enum
 {
     RED_SLIME,
     WIZ,
-}Type;
+} Type;
 
 typedef struct
 {
@@ -33,7 +33,7 @@ void UpdateRedSlime(Enemy* enemy, TileMap* map, Player* player);
 void CreateWiz(Enemy* enemy, Texture2D texture);
 void UpdateWiz(Enemy* enemy, TileMap* map, Player* player);
 
-void UpdateEnemy(Enemy* enemy, TileMap* map, Player* player );
+void UpdateEnemy(Enemy* enemy, TileMap* map, Player* player);
 void DrawEnemy(Enemy* enemy);
 
 #endif //TESTGAME2_ENEMY_H
