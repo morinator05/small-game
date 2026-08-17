@@ -6,7 +6,7 @@
 
 void UpdateAnimation(Animation* animation)
 {
-    float delta = GetFrameTime();
+    const float delta = GetFrameTime();
     animation->time_left -= delta;
 
     if (animation->time_left <= 0.0f)
@@ -21,10 +21,10 @@ void UpdateAnimation(Animation* animation)
     }
 }
 
-Rectangle GetCurrentFrame(Animation* animation, int frames_per_row)
+Rectangle GetCurrentFrame(const Animation* animation, const int frames_per_row)
 {
-    float x = (animation->current % frames_per_row) * 16;
-    float y = (animation->current / frames_per_row) * 16;
+    const float x = (animation->current % frames_per_row) * 16;
+    const float y = (animation->current / frames_per_row) * 16;
 
     return (Rectangle){
         .x = x,
@@ -35,7 +35,7 @@ Rectangle GetCurrentFrame(Animation* animation, int frames_per_row)
 }
 
 
-void SetRow(Animation* anim, int row, int frames_per_row)
+void SetRow(Animation* anim, const int row, const int frames_per_row)
 {
     anim->first = row * frames_per_row;
     anim->last = anim->first + frames_per_row - 1;

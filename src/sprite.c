@@ -5,7 +5,7 @@
 #include <raylib.h>
 #include "../include/sprite.h"
 
-void DrawSprite(Sprite* sprite, Vector2 position)
+void DrawSprite(Sprite* sprite, const Vector2 position)
 {
     UpdateAnimation(&sprite->anim);
 

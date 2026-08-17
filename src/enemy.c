@@ -9,7 +9,7 @@
 
 void CreateRedSlime(Enemy* enemy, Texture2D texture)
 {
-    Animation enemy_anim = (Animation){
+    const auto enemy_anim = (Animation){
         .first = 0,
         .last = 3,
         .current = 0,
@@ -17,7 +17,7 @@ void CreateRedSlime(Enemy* enemy, Texture2D texture)
         .time_left = 0
     };
 
-    Sprite enemy_sprite = (Sprite){
+    const auto enemy_sprite = (Sprite){
         .texture = texture,
         .frames_per_line = 4,
         .origin = {0, 0},
@@ -34,7 +34,7 @@ void CreateRedSlime(Enemy* enemy, Texture2D texture)
         .angry = false,
         .trigger_radius = 100,
         .hit_radius = 10,
-        .hit_rate = 5.0f,
+        .hit_rate = 2.0f,
         .hit_cooldown = 0.f,
         .damage_per_hit = 50
     };
@@ -44,7 +44,7 @@ void UpdateRedSlime(Enemy* enemy, TileMap* map, Player* player)
 {
     UpdateAnimation(&enemy->sprite.anim);
 
-    //Update Hit Cooldownd
+    //Update Hit Cooldown
     enemy->hit_cooldown -= GetFrameTime();
     if (enemy->hit_cooldown < 0) enemy->hit_cooldown = 0;
 
@@ -98,7 +98,7 @@ void UpdateRedSlime(Enemy* enemy, TileMap* map, Player* player)
 
 void CreateWiz(Enemy* enemy, Texture2D texture)
 {
-    Animation enemy_anim = (Animation){
+    const auto enemy_anim = (Animation){
         .first = 0,
         .last = 0,
         .current = 0,
@@ -106,7 +106,7 @@ void CreateWiz(Enemy* enemy, Texture2D texture)
         .time_left = 0
     };
 
-    Sprite enemy_sprite = (Sprite){
+    const auto enemy_sprite = (Sprite){
         .texture = texture,
         .frames_per_line = 4,
         .origin = {0, 0},

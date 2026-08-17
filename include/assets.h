@@ -11,12 +11,14 @@
 typedef struct
 {
     Texture2D player;
-    Texture2D worldDefault;
+    Texture2D waterTiles;
+    Texture2D dirtTiles;
+    Texture2D grasTiles;
     Texture2D redSlime;
     Texture2D darkWiz;
 } Assets;
 
 void LoadAssets(Assets* assets);
-void UnloadAssets(Assets* assets);
+void UnloadAssets(const Assets* assets);
 
 #endif //TESTGAME2_ASSETS_H

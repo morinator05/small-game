@@ -22,6 +22,6 @@ void Reset(Animation* anim);
 
 void UpdateAnimation(Animation* animation);
 
-Rectangle GetCurrentFrame(Animation* animation, int frames_per_row);
+Rectangle GetCurrentFrame(const Animation* animation, int frames_per_row);
 
 #endif //TESTGAME2_ANIMATION_H
