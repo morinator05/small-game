@@ -74,7 +74,7 @@ void DrawTileMap(TileMap* tilemap)
                 TILE_SIZE
             };
             DrawTextureRec(
-                tilemap->assets.grasTiles,
+                tilemap->assets.tileset_gras,
                 grassTile,
                 (Vector2){ x * TILE_SIZE, y * TILE_SIZE },
                 WHITE
@@ -82,8 +82,8 @@ void DrawTileMap(TileMap* tilemap)
         }
     }
 
-    DrawTileLayer(tilemap, TILE_DIRT, tilemap->assets.dirtTiles);
-    DrawTileLayer(tilemap, TILE_WATER, tilemap->assets.waterTiles);
+    DrawTileLayer(tilemap, TILE_DIRT, tilemap->assets.tileset_dirt);
+    DrawTileLayer(tilemap, TILE_WATER, tilemap->assets.tileset_water);
 
 }
 

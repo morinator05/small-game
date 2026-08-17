@@ -3,20 +3,20 @@
 
 void LoadAssets(Assets* assets)
 {
-    assets->player = LoadTexture("asset/player_all_tiles.png");
-    assets->grasTiles = LoadTexture("asset/tiles/gras.png");
-    assets->dirtTiles = LoadTexture("asset/tiles/dirt.png");
-    assets->waterTiles = LoadTexture("asset/tiles/water.png");
-    assets->redSlime = LoadTexture("asset/slime_red.png");
-    assets->darkWiz = LoadTexture("asset/purple_wizard.png");
+    assets->spritesheet_player = LoadTexture("asset/player_all_tiles.png");
+    assets->tileset_gras = LoadTexture("asset/tiles/gras.png");
+    assets->tileset_dirt = LoadTexture("asset/tiles/dirt.png");
+    assets->tileset_water = LoadTexture("asset/tiles/water.png");
+    assets->spritesheet_red_slime = LoadTexture("asset/slime_red.png");
+    assets->spritesheet_dark_wiz = LoadTexture("asset/purple_wizard.png");
 }
 
 void UnloadAssets(const Assets* assets)
 {
-    UnloadTexture(assets->player);
-    UnloadTexture(assets->dirtTiles);
-    UnloadTexture(assets->waterTiles);
-    UnloadTexture(assets->grasTiles);
-    UnloadTexture(assets->redSlime);
-    UnloadTexture(assets->redSlime);
+    UnloadTexture(assets->spritesheet_player);
+    UnloadTexture(assets->tileset_dirt);
+    UnloadTexture(assets->tileset_water);
+    UnloadTexture(assets->tileset_gras);
+    UnloadTexture(assets->spritesheet_red_slime);
+    UnloadTexture(assets->spritesheet_red_slime);
 }
