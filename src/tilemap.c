@@ -158,13 +158,17 @@ void UpdateEditor(const TileMap* map, const Camera2D camera)
 
     if (tile_x >= 0 && tile_x < map->width && tile_y >= 0 && tile_y < map->height)
     {
-        if (IsMouseButtonDown(MOUSE_BUTTON_LEFT))
+        if (IsMouseButtonDown(MOUSE_BUTTON_LEFT) && !IsKeyDown(KEY_LEFT_SHIFT))
         {
             map->tiles[tile_y * map->width + tile_x] = TILE_DIRT;
         }
-        else if (IsMouseButtonDown(MOUSE_BUTTON_RIGHT))
+        else if (IsMouseButtonDown(MOUSE_BUTTON_RIGHT) && !IsKeyDown(KEY_LEFT_SHIFT))
         {
             map->tiles[tile_y * map->width + tile_x] = TILE_GRASS;
+        }
+        else if (IsMouseButtonDown(MOUSE_BUTTON_LEFT) && IsKeyDown(KEY_LEFT_SHIFT))
+        {
+            map->tiles[tile_y * map->width + tile_x] = TILE_WATER;
         }
     }
 }
