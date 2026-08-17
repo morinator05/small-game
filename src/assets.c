@@ -1,6 +1,3 @@
-//
-// Created by mori on 12.07.26.
-//
 #include "../include/assets.h"
 
 

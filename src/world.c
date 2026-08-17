@@ -1,7 +1,3 @@
-//
-// Created by mori on 16.08.26.
-//
-
 #include "../include/world.h"
 #include "../include/enemy.h"
 

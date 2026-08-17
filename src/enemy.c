@@ -1,7 +1,3 @@
-//
-// Created by mori on 15.08.26.
-//
-
 #include <raylib.h>
 #include "../include/enemy.h"
 
