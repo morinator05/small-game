@@ -28,13 +28,18 @@ int main()
     TileMap level;
     CreateLevel1(&level, assets);
 
+    World world;
+    CreateWorld(&world, 0, level);
+
     Enemy enemy;
     CreateRedSlime(&enemy, assets.spritesheet_red_slime);
     enemy.position = (Vector2){20, 20};
-
-    World world;
-    CreateWorld(&world, 0, level);
     AddEnemyToWorld(&world, enemy);
+    CreateWiz(&enemy, assets.spritesheet_dark_wiz);
+    enemy.position = (Vector2) {100 ,200};
+    AddEnemyToWorld(&world, enemy);
+
+
 
     Camera2D camera = {0};
     camera.target = player.position;
