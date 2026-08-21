@@ -6,33 +6,27 @@
 void CreateRedSlime(Enemy* enemy, Texture2D texture)
 {
     const auto enemy_anim = (Animation){
-        .first = 0,
-        .last = 3,
-        .current = 0,
-        .speed = 0.4f,
-        .time_left = 0
+        .first = ANIM_FRAME_FIRST,
+        .last = ANIM_FRAME_LAST,
+        .speed = ANIM_SPEED,
     };
 
     const auto enemy_sprite = (Sprite){
         .texture = texture,
-        .frames_per_line = 4,
-        .origin = {0, 0},
-        .rotation = 0.0f,
+        .frames_per_line = ANIM_FRAMES_PER_LINE,
         .anim = enemy_anim
     };
 
     *enemy = (Enemy){
         .type = RED_SLIME,
         .sprite = enemy_sprite,
-        .position = {0, 0},
-        .hp = 100,
-        .velocity = 10,
+        .hp = ENEMY_RED_SLIME_HP,
+        .velocity = ENEMY_RED_SLIME_VELOCITY,
         .angry = false,
-        .trigger_radius = 100,
-        .hit_radius = 10,
-        .hit_rate = 2.0f,
-        .hit_cooldown = 0.f,
-        .damage_per_hit = 50
+        .trigger_radius = ENEMY_RED_SLIME_TRIGGER_DISTANCE,
+        .hit_radius = ENEMY_HIT_RADIUS,
+        .hit_rate = ENEMY_RED_SLIME_HIT_RATE,
+        .damage_per_hit = ENEMY_RED_SLIME_DAMAGE
     };
 }
 
@@ -84,11 +78,11 @@ void UpdateRedSlime(Enemy* enemy, TileMap* map, Player* player)
 
     if (!enemy->angry)
     {
-        SetRow(&enemy->sprite.anim, TEXTURE_ENEMY_ROW_IDLE, enemy->sprite.frames_per_line);
+        SetRow(&enemy->sprite.anim, ENEMY_TEXTURE_ROW_IDLE, enemy->sprite.frames_per_line);
     }
     else
     {
-        SetRow(&enemy->sprite.anim, TEXTURE_ENEMY_ROW_ANGRY, enemy->sprite.frames_per_line);
+        SetRow(&enemy->sprite.anim, ENEMY_TEXTURE_ROW_ANGRY, enemy->sprite.frames_per_line);
     }
 }
 

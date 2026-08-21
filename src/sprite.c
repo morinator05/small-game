@@ -1,6 +1,8 @@
 #include <raylib.h>
 #include "../include/sprite.h"
 
+#include "../include/assets.h"
+
 void DrawSprite(Sprite* sprite, const Vector2 position)
 {
     UpdateAnimation(&sprite->anim);

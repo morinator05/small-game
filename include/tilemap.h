@@ -4,7 +4,6 @@
 
 #include "assets.h"
 
-#define TILE_SIZE 16
 #define PLAYER_MARGIN 4
 
 //Tile identifiers in the actual game map
