@@ -13,9 +13,9 @@ void DrawPlayer(Player* player)
              player->position.y + TILE_SIZE, 5, WHITE);
 }
 
-void CreatePlayer(Player* player, const Texture2D texture)
+void CreatePlayer(Player* player)
 {
-    player->sprite.texture = texture;
+    player->sprite.texture = assets.spritesheet_player;
     player->sprite.origin = (Vector2){0, 0};
     player->velocity = PLAYER_DEFAULT_VELOCITY;
     player->sprite.frames_per_line = ANIM_FRAMES_PER_LINE;

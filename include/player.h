@@ -44,7 +44,7 @@ typedef struct Player
     Directions current_direction;
 } Player;
 
-void CreatePlayer(Player* player, Texture2D texture);
+void CreatePlayer(Player* player);
 void DrawPlayer(Player* player);
 void MovePlayer(Player* player, const TileMap* tilemap);
 void UpdatePlayer(Player* player, World* world);

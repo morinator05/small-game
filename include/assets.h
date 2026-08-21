@@ -34,11 +34,15 @@ typedef struct
     Sound player_walk_dirt;
     Sound player_walk_sand;
 
+    Sound ambient_forrest;
+
     Sound slime_walk;
     Sound slime_attack;
 } Assets;
 
-void LoadAssets(Assets* assets);
-void UnloadAssets(const Assets* assets);
+extern Assets assets;
+
+void LoadAssets(void);
+void UnloadAssets(void);
 
 #endif //TESTGAME2_ASSETS_H

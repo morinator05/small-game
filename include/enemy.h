@@ -41,10 +41,10 @@ typedef struct Enemy
     int damage_per_hit;
 } Enemy;
 
-void CreateRedSlime(Enemy* enemy, Texture2D texture);
+void CreateRedSlime(Enemy* enemy);
 void UpdateRedSlime(Enemy* enemy, TileMap* map, Player* player);
 
-void CreateWiz(Enemy* enemy, Texture2D texture);
+void CreateWiz(Enemy* enemy);
 void UpdateWiz(Enemy* enemy, TileMap* map, Player* player);
 
 void UpdateEnemy(Enemy* enemy, TileMap* map, Player* player);

@@ -1,22 +1,27 @@
 #include "../include/assets.h"
 
+Assets assets;
 
-void LoadAssets(Assets* assets)
+void LoadAssets()
 {
-    assets->spritesheet_player = LoadTexture("asset/player_all_tiles.png");
-    assets->tileset_gras = LoadTexture("asset/tiles/gras.png");
-    assets->tileset_dirt = LoadTexture("asset/tiles/dirt.png");
-    assets->tileset_water = LoadTexture("asset/tiles/water.png");
-    assets->spritesheet_red_slime = LoadTexture("asset/slime_red.png");
-    assets->spritesheet_dark_wiz = LoadTexture("asset/purple_wizard.png");
+    assets.spritesheet_player = LoadTexture("asset/player_all_tiles.png");
+    assets.tileset_gras = LoadTexture("asset/tiles/gras.png");
+    assets.tileset_dirt = LoadTexture("asset/tiles/dirt.png");
+    assets.tileset_water = LoadTexture("asset/tiles/water.png");
+    assets.spritesheet_red_slime = LoadTexture("asset/slime_red.png");
+    assets.spritesheet_dark_wiz = LoadTexture("asset/purple_wizard.png");
+
+    assets.player_walk_dirt = LoadSound("asset/sounds/walking/dirt.mp3");
+    assets.player_walk_gras = LoadSound("asset/sounds/walking/grass.mp3");
+    assets.ambient_forrest = LoadSound("asset/sounds/ambient/forrest.mp3");
 }
 
-void UnloadAssets(const Assets* assets)
+void UnloadAssets()
 {
-    UnloadTexture(assets->spritesheet_player);
-    UnloadTexture(assets->tileset_dirt);
-    UnloadTexture(assets->tileset_water);
-    UnloadTexture(assets->tileset_gras);
-    UnloadTexture(assets->spritesheet_red_slime);
-    UnloadTexture(assets->spritesheet_dark_wiz);
+    UnloadTexture(assets.spritesheet_player);
+    UnloadTexture(assets.tileset_dirt);
+    UnloadTexture(assets.tileset_water);
+    UnloadTexture(assets.tileset_gras);
+    UnloadTexture(assets.spritesheet_red_slime);
+    UnloadTexture(assets.spritesheet_dark_wiz);
 }
