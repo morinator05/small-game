@@ -4,12 +4,13 @@ Assets assets;
 
 void LoadAssets()
 {
-    assets.spritesheet_player = LoadTexture("asset/player.png");
+    assets.spritesheet_player = LoadTexture("asset/sprites/player.png");
     assets.tileset_gras = LoadTexture("asset/tiles/gras.png");
     assets.tileset_dirt = LoadTexture("asset/tiles/dirt.png");
     assets.tileset_water = LoadTexture("asset/tiles/water.png");
-    assets.spritesheet_red_slime = LoadTexture("asset/slime_red.png");
-    assets.spritesheet_dark_wiz = LoadTexture("asset/purple_wizard.png");
+    assets.spritesheet_red_slime = LoadTexture("asset/sprites/slime_red.png");
+    assets.spritesheet_dark_wiz = LoadTexture("asset/sprites/purple_wizard.png");
+    assets.spritesheet_sword = LoadTexture("asset/weapons/sword.png");
 
     assets.player_walk_dirt = LoadSound("asset/sounds/walking/dirt.mp3");
     assets.player_walk_gras = LoadSound("asset/sounds/walking/grass.mp3");
@@ -24,4 +25,9 @@ void UnloadAssets()
     UnloadTexture(assets.tileset_gras);
     UnloadTexture(assets.spritesheet_red_slime);
     UnloadTexture(assets.spritesheet_dark_wiz);
+    UnloadTexture(assets.spritesheet_sword);
+
+    UnloadSound(assets.player_walk_dirt);
+    UnloadSound(assets.player_walk_gras);
+    UnloadSound(assets.ambient_forrest);
 }
