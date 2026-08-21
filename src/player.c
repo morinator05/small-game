@@ -13,25 +13,21 @@ void CreatePlayer(Player* player, const Texture2D texture)
 {
     player->sprite.texture = texture;
     player->sprite.origin = (Vector2){0, 0};
-    player->sprite.rotation = 0;
-    player->position = (Vector2){0, 0};
-    player->velocity = 22;
-    player->sprite.frames_per_line = FRAMES_PER_LINE;
+    player->velocity = PLAYER_DEFAULT_VELOCITY;
+    player->sprite.frames_per_line = ANIM_FRAMES_PER_LINE;
     player->sprite.anim = (Animation){
-        .first = 0,
-        .last = 3,
-        .current = 0,
-        .speed = .2f,
-        .time_left = 0
+        .first = ANIM_FRAME_FIRST,
+        .last = ANIM_FRAME_LAST,
+        .speed = ANIM_SPEED,
     };
-    player->hp = 1000.0f;
+    player->hp = PLAYER_DEFAULT_HP;
 }
 
 void MovePlayer(Player* player, const TileMap* tilemap)
 {
     //Calculate speed
     float distance = player->velocity * GetFrameTime();
-    distance = IsKeyDown(KEY_LEFT_SHIFT) ? 2 * distance : distance;
+    distance = IsKeyDown(KEY_LEFT_SHIFT) ? PLAYER_RUNNING_MULTIPLIER * distance : distance;
 
     Vector2 new_position = player->position;
     Vector2 move_vector = {0, 0};
@@ -91,15 +87,15 @@ void MovePlayer(Player* player, const TileMap* tilemap)
 
     switch (current_direction)
     {
-    case UP: SetRow(&player->sprite.anim, TEXTURE_PLAYER_ROW_UP, player->sprite.frames_per_line);
+    case UP: SetRow(&player->sprite.anim, PLAYER_TEXTURE_ROW_UP, player->sprite.frames_per_line);
         break;
-    case DOWN: SetRow(&player->sprite.anim, TEXTURE_PLAYER_ROW_DOWN, player->sprite.frames_per_line);
+    case DOWN: SetRow(&player->sprite.anim, PLAYER_TEXTURE_ROW_DOWN, player->sprite.frames_per_line);
         break;
-    case LEFT: SetRow(&player->sprite.anim, TEXTURE_PLAYER_ROW_LEFT, player->sprite.frames_per_line);
+    case LEFT: SetRow(&player->sprite.anim, PLAYER_TEXTURE_ROW_LEFT, player->sprite.frames_per_line);
         break;
-    case RIGHT: SetRow(&player->sprite.anim, TEXTURE_PLAYER_ROW_RIGHT, player->sprite.frames_per_line);
+    case RIGHT: SetRow(&player->sprite.anim, PLAYER_TEXTURE_ROW_RIGHT, player->sprite.frames_per_line);
         break;
-    case IDLE: SetRow(&player->sprite.anim, TEXTURE_PLAYER_ROW_IDLE, player->sprite.frames_per_line);
+    case IDLE: SetRow(&player->sprite.anim, PLAYER_TEXTURE_ROW_IDLE, player->sprite.frames_per_line);
         break;
     }
 

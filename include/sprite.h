@@ -4,8 +4,6 @@
 
 #include "animation.h"
 
-#define TILE_SIZE 16
-
 typedef struct
 {
     Texture2D texture;

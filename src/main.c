@@ -66,7 +66,7 @@ int main()
         EndMode2D();
 
         DrawText(TextFormat("FPS: %d", GetFPS()), GetScreenWidth() / 2 - 40, 0, 20, WHITE);
-        GuiProgressBar((Rectangle){0, 0, 150, 25}, "0", "max", &player.hp, 0, 1000);
+        GuiProgressBar((Rectangle){0, 0, 150, 25}, "0", "max", &player.hp, 0, PLAYER_DEFAULT_HP);
 
         EndDrawing();
     }

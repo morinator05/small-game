@@ -2,7 +2,20 @@
 #define TESTGAME2_ASSETS_H
 #include <raylib.h>
 
-#define FRAMES_PER_LINE 4
+#define ANIM_FRAMES_PER_LINE 4
+#define ANIM_FRAME_FIRST 0
+#define ANIM_FRAME_LAST 3
+#define ANIM_SPEED .2f
+#define TILE_SIZE 16
+
+#define PLAYER_TEXTURE_ROW_IDLE 0
+#define PLAYER_TEXTURE_ROW_DOWN 1
+#define PLAYER_TEXTURE_ROW_UP 2
+#define PLAYER_TEXTURE_ROW_LEFT 3
+#define PLAYER_TEXTURE_ROW_RIGHT 4
+
+#define ENEMY_TEXTURE_ROW_IDLE 0
+#define ENEMY_TEXTURE_ROW_ANGRY 1
 
 typedef struct
 {
