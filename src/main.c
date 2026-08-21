@@ -16,6 +16,13 @@ int main()
     InitWindow(GetMonitorWidth(0), GetMonitorHeight(0), "Yet Another 2D Adventure Game");
     SetTargetFPS(GetMonitorRefreshRate(0));
 
+    InitAudioDevice();
+    if (!IsAudioDeviceReady())
+    {
+        return EXIT_FAILURE;
+    }
+
+
     LoadAssets();
 
     //create a spritesheet_player
@@ -35,9 +42,8 @@ int main()
     enemy.position = (Vector2){20, 20};
     AddEnemyToWorld(&world, enemy);
     CreateWiz(&enemy);
-    enemy.position = (Vector2) {100 ,200};
+    enemy.position = (Vector2){100, 200};
     AddEnemyToWorld(&world, enemy);
-
 
 
     Camera2D camera = {0};
@@ -57,17 +63,21 @@ int main()
         MovePlayer(&player, &world.map);
         UpdateWorld(&world, &player);
         UpdatePlayer(&player, &world);
-        //UpdateEditor(&world.map, camera);
+        UpdateEditor(&world.map, camera);
 
         BeginDrawing();
 
         BeginMode2D(camera);
         ClearBackground(BLACK);
         DrawWorld(&world);
+        DrawTileMapDebugGrid(&world.map);
         DrawPlayer(&player);
         EndMode2D();
 
         DrawText(TextFormat("FPS: %d", GetFPS()), GetScreenWidth() / 2 - 40, 0, 20, WHITE);
+        DrawText(TextFormat("Sound: %f", GetMasterVolume()), 0, 0, 20, WHITE);
+        DrawText(TextFormat("(%d, %d)", (int)(TILE_SIZE / 2 + player.position.x) / TILE_SIZE,
+                            (int)player.position.y / TILE_SIZE + 1), 0, 20, 20, WHITE);
 
         EndDrawing();
     }
