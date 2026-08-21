@@ -1,7 +1,7 @@
 #include <raylib.h>
 #include "../include/enemy.h"
-
 #include <raymath.h>
+#include "../include/player.h"
 
 void CreateRedSlime(Enemy* enemy, Texture2D texture)
 {
@@ -20,6 +20,7 @@ void CreateRedSlime(Enemy* enemy, Texture2D texture)
     *enemy = (Enemy){
         .type = RED_SLIME,
         .sprite = enemy_sprite,
+        .alive = true,
         .hp = ENEMY_RED_SLIME_HP,
         .velocity = ENEMY_RED_SLIME_VELOCITY,
         .angry = false,
@@ -33,6 +34,7 @@ void CreateRedSlime(Enemy* enemy, Texture2D texture)
 void UpdateRedSlime(Enemy* enemy, TileMap* map, Player* player)
 {
     UpdateAnimation(&enemy->sprite.anim);
+    if (!enemy->alive) return;
 
     //Update Hit Cooldown
     enemy->hit_cooldown -= GetFrameTime();
@@ -84,6 +86,9 @@ void UpdateRedSlime(Enemy* enemy, TileMap* map, Player* player)
     {
         SetRow(&enemy->sprite.anim, ENEMY_TEXTURE_ROW_ANGRY, enemy->sprite.frames_per_line);
     }
+
+    if (enemy->hp <= 0) enemy->alive = false;
+
 }
 
 void CreateWiz(Enemy* enemy, Texture2D texture)
@@ -108,6 +113,7 @@ void CreateWiz(Enemy* enemy, Texture2D texture)
         .type = RED_SLIME,
         .sprite = enemy_sprite,
         .position = {300, 100},
+        .alive = true,
         .hp = 100,
         .velocity = 10,
         .angry = false,
@@ -121,6 +127,7 @@ void CreateWiz(Enemy* enemy, Texture2D texture)
 
 void UpdateWiz(Enemy* enemy, TileMap* map, Player* player)
 {
+    if (!enemy->alive) return;
 }
 
 void UpdateEnemy(Enemy* enemy, TileMap* map, Player* player)
@@ -137,4 +144,5 @@ void UpdateEnemy(Enemy* enemy, TileMap* map, Player* player)
 void DrawEnemy(Enemy* enemy)
 {
     DrawSprite(&enemy->sprite, enemy->position);
+    DrawText(TextFormat("(%d,%f)",  enemy->hp, enemy->hit_cooldown), enemy->position.x + TILE_SIZE, enemy->position.y + TILE_SIZE, 2, RED);
 }
