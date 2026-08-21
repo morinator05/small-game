@@ -24,7 +24,7 @@ int main()
     Player player;
     CreatePlayer(&player, assets.spritesheet_player);
     player.position = (Vector2){40.f, 20.f};
-    AquireWeapon(&player, SWORD);
+    AcquireWeapon(&player, SWORD);
 
     TileMap level;
     CreateLevel1(&level, assets);

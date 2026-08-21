@@ -21,8 +21,18 @@ typedef enum
 typedef enum
 {
     UNARMED,
-    SWORD
-}Weapons;
+    SWORD,
+    BOW
+}WeaponTypes;
+
+typedef struct
+{
+    WeaponTypes type;
+    int damage;
+    float hit_rate;
+    float cooldown;
+    float reach;
+}Weapon;
 
 typedef struct Player
 {
@@ -30,10 +40,7 @@ typedef struct Player
     Vector2 position;
     int velocity;
     int hp;
-    int weapon_damage;
-    float weapon_cooldown;
-    float hit_rate;
-    int weapon_RANGE;
+    Weapon weapon;
     Directions current_direction;
 } Player;
 
@@ -41,6 +48,6 @@ void CreatePlayer(Player* player, Texture2D texture);
 void DrawPlayer(Player* player);
 void MovePlayer(Player* player, const TileMap* tilemap);
 void UpdatePlayer(Player* player, World* world);
-void AquireWeapon(Player* player, Weapons weapon);
+void AcquireWeapon(Player* player, WeaponTypes weapon_type);
 
 #endif //TESTGAME2_PLAYER_H
