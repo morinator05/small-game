@@ -4,7 +4,7 @@ Assets assets;
 
 void LoadAssets()
 {
-    assets.spritesheet_player = LoadTexture("asset/player_all_tiles.png");
+    assets.spritesheet_player = LoadTexture("asset/player.png");
     assets.tileset_gras = LoadTexture("asset/tiles/gras.png");
     assets.tileset_dirt = LoadTexture("asset/tiles/dirt.png");
     assets.tileset_water = LoadTexture("asset/tiles/water.png");
