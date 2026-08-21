@@ -45,20 +45,19 @@ int main()
     enemy.position = (Vector2){100, 200};
     AddEnemyToWorld(&world, enemy);
 
-
     Camera2D camera = {0};
     camera.target = player.position;
     camera.rotation = 0.0f;
-    camera.zoom = 6.0f;
+    camera.zoom = 7.0f;
     camera.offset = (Vector2){
         GetScreenWidth() / 2.0f,
         GetScreenHeight() / 2.0f
     };
 
-    PlaySound(assets.ambient_forrest);
-
     while (!WindowShouldClose())
     {
+        if (!IsSoundPlaying(assets.ambient_forrest)) PlaySound(assets.ambient_forrest);
+
         camera.target = player.position;
         MovePlayer(&player, &world.map);
         UpdateWorld(&world, &player);
@@ -66,9 +65,9 @@ int main()
         UpdateEditor(&world.map, camera);
 
         BeginDrawing();
+        ClearBackground(BLACK);
 
         BeginMode2D(camera);
-        ClearBackground(BLACK);
         DrawWorld(&world);
         DrawTileMapDebugGrid(&world.map);
         DrawPlayer(&player);
