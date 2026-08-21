@@ -9,7 +9,8 @@
 void DrawPlayer(Player* player)
 {
     DrawSprite(&player->sprite, player->position);
-    DrawText(TextFormat("(%d,%f)", player->hp, player->weapon_cooldown), player->position.x + TILE_SIZE, player->position.y + TILE_SIZE, 5, WHITE);
+    DrawText(TextFormat("(%d,%f)", player->hp, player->weapon.cooldown), player->position.x + TILE_SIZE,
+             player->position.y + TILE_SIZE, 5, WHITE);
 }
 
 void CreatePlayer(Player* player, const Texture2D texture)
@@ -118,49 +119,52 @@ static Vector2 DirectionToVector(int direction)
     case LEFT: return (Vector2){-1, 0};
     case RIGHT: return (Vector2){1, 0};
     case IDLE: return (Vector2){0, 1};
+    default: return (Vector2){0, 0};;
     }
-    return (Vector2){0, 0};
 }
 
 void UpdatePlayer(Player* player, World* world)
 {
-    player->weapon_cooldown -= GetFrameTime();
-    if (player->weapon_cooldown < 0) player->weapon_cooldown = 0;
+    player->weapon.cooldown -= GetFrameTime();
+    if (player->weapon.cooldown < 0) player->weapon.cooldown = 0;
 
-    if (!IsKeyDown(KEY_SPACE) || player->weapon_cooldown != 0) return;
+    if (!IsKeyDown(KEY_SPACE) || player->weapon.cooldown != 0) return;
 
     for (int i = 0; i < world->enemy_count; i++)
     {
         Enemy* target = (world->enemies + i);
         float distance_to_target = Vector2Distance(player->position, target->position);
 
-        if (distance_to_target <= player->weapon_RANGE)
+        if (distance_to_target <= player->weapon.reach)
         {
             Vector2 to_target = Vector2Normalize(Vector2Subtract(target->position, player->position));
             float dot_product = Vector2DotProduct(DirectionToVector(player->current_direction), to_target);
 
             if (dot_product >= 0.0f)
             {
-                target->hp -= player->weapon_damage;
+                target->hp -= player->weapon.damage;
             }
         }
     }
-    player->weapon_cooldown = player->hit_rate;
+    player->weapon.cooldown = player->weapon.hit_rate;
 }
 
-void AquireWeapon(Player* player, Weapons weapon)
+void AcquireWeapon(Player* player, WeaponTypes weapon_type)
 {
-    switch (weapon)
+    switch (weapon_type)
     {
-    case UNARMED: player->weapon_damage = 5;
-        player->weapon_cooldown = 0.f;
-        player->hit_rate = 1.f;
-        player->weapon_RANGE = ENEMY_HIT_RADIUS + 10;
+    case UNARMED: player->weapon = (Weapon){
+            .type = UNARMED,
+            .damage = 10,
+            .hit_rate = 1.f,
+            .reach = 20
+        };
         break;
-    case SWORD: player->weapon_damage = 10;
-        player->weapon_cooldown = 0.f;
-        player->hit_rate = 2.f;
-        player->weapon_RANGE = ENEMY_HIT_RADIUS + 20;
-        break;
+    case SWORD: player->weapon = (Weapon){
+            .type = SWORD,
+            .damage = 50,
+            .hit_rate = 1.5f,
+            .reach = 40
+        };
     }
 }

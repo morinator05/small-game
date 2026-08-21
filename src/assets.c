@@ -18,5 +18,5 @@ void UnloadAssets(const Assets* assets)
     UnloadTexture(assets->tileset_water);
     UnloadTexture(assets->tileset_gras);
     UnloadTexture(assets->spritesheet_red_slime);
-    UnloadTexture(assets->spritesheet_red_slime);
+    UnloadTexture(assets->spritesheet_dark_wiz);
 }
