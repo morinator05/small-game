@@ -28,21 +28,22 @@ typedef struct
     Texture2D spritesheet_player;
     Texture2D spritesheet_red_slime;
     Texture2D spritesheet_dark_wiz;
+    Texture2D spritesheet_sword;
 
-    //Sounds
+    //Ambient sounds
+    Sound ambient_forrest;
+
+    //Walking
+    Sound slime_walk;
+    Sound slime_attack;
     Sound player_walk_gras;
     Sound player_walk_dirt;
     Sound player_walk_sand;
-
-    Sound ambient_forrest;
-
-    Sound slime_walk;
-    Sound slime_attack;
 } Assets;
 
 extern Assets assets;
 
-void LoadAssets(void);
-void UnloadAssets(void);
+void LoadAssets();
+void UnloadAssets();
 
 #endif //TESTGAME2_ASSETS_H

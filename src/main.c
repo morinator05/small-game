@@ -22,14 +22,13 @@ int main()
         return EXIT_FAILURE;
     }
 
-
     LoadAssets();
 
     //create a spritesheet_player
     Player player;
     CreatePlayer(&player);
     player.position = (Vector2){40.f, 20.f};
-    AcquireWeapon(&player, SWORD);
+    AcquireWeapon(&player, UNARMED);
 
     TileMap level;
     CreateLevel1(&level);
@@ -77,7 +76,6 @@ int main()
         DrawText(TextFormat("Sound: %f", GetMasterVolume()), 0, 0, 20, WHITE);
         DrawText(TextFormat("(%d, %d)", (int)(TILE_SIZE / 2 + player.position.x) / TILE_SIZE,
                             (int)player.position.y / TILE_SIZE + 1), 0, 20, 20, WHITE);
-
         EndDrawing();
     }
 
