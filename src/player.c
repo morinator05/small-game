@@ -17,6 +17,7 @@ void CreatePlayer(Player* player)
 {
     player->sprite.texture = assets.spritesheet_player;
     player->sprite.origin = (Vector2){0, 0};
+    player->sprite.rotation = 0;
     player->velocity = PLAYER_DEFAULT_VELOCITY;
     player->sprite.frames_per_line = ANIM_FRAMES_PER_LINE;
     player->sprite.anim = (Animation){
@@ -25,6 +26,32 @@ void CreatePlayer(Player* player)
         .speed = ANIM_SPEED,
     };
     player->hp = PLAYER_DEFAULT_HP;
+}
+
+static TileCodes TileBeneathPlayer(const Player* player, const TileMap* tilemap)
+{
+    Vector2 pos = player->position;
+    int x = (pos.x + TILE_SIZE / 2) / TILE_SIZE;
+    int y = pos.y / TILE_SIZE + 1;
+    if (x < 0 || x >= tilemap->width || y < 0 || y >= tilemap->height)
+    {
+        return 0;
+    }
+    return tilemap->tiles[x + y * tilemap->width];
+}
+
+static void PlayWalkingSound(const Player* player, const TileMap* tilemap)
+{
+    if (!IsSoundPlaying(assets.player_walk_gras) & !IsSoundPlaying(assets.player_walk_dirt))
+    {
+        switch (TileBeneathPlayer(player, tilemap))
+        {
+        case TILE_GRASS: PlaySound(assets.player_walk_gras);
+            break;
+        case TILE_DIRT: PlaySound(assets.player_walk_dirt);
+            break;
+        }
+    }
 }
 
 void MovePlayer(Player* player, const TileMap* tilemap)
@@ -74,6 +101,7 @@ void MovePlayer(Player* player, const TileMap* tilemap)
         if (!CheckCollisionWithMap(tilemap, (Rectangle){new_position.x, new_position.y,TILE_SIZE,TILE_SIZE}))
         {
             player->position.x += move_vector.x;
+            PlayWalkingSound(player, tilemap);
         }
         new_position.x = player->position.x;
 
@@ -82,6 +110,7 @@ void MovePlayer(Player* player, const TileMap* tilemap)
         if (!CheckCollisionWithMap(tilemap, (Rectangle){new_position.x, new_position.y,TILE_SIZE,TILE_SIZE}))
         {
             player->position.y += move_vector.y;
+            PlayWalkingSound(player, tilemap);
         }
     }
     else

@@ -24,10 +24,10 @@ static void DrawTileLayer(const TileMap* tilemap, const TileCodes tile_type_to_d
     {
         for (int x = 0; x <= tilemap->width; x++)
         {
-            int top_left     = GetTileBit(tilemap, x - 1, y - 1, tile_type_to_draw);
-            int top_right    = GetTileBit(tilemap, x,     y - 1, tile_type_to_draw);
-            int bottom_left  = GetTileBit(tilemap, x - 1, y,     tile_type_to_draw);
-            int bottom_right = GetTileBit(tilemap, x,     y,     tile_type_to_draw);
+            int top_left = GetTileBit(tilemap, x - 1, y - 1, tile_type_to_draw);
+            int top_right = GetTileBit(tilemap, x, y - 1, tile_type_to_draw);
+            int bottom_left = GetTileBit(tilemap, x - 1, y, tile_type_to_draw);
+            int bottom_right = GetTileBit(tilemap, x, y, tile_type_to_draw);
 
             //create a mask consisting of the bits of each 4 adjacent tiles
             int mask = top_left + (top_right << 1) + (bottom_left << 2) + (bottom_right << 3);
@@ -54,7 +54,7 @@ static void DrawTileLayer(const TileMap* tilemap, const TileCodes tile_type_to_d
 
             //Set the origin for the rotation to the center of the tile
             //Also shifts the tile to its intendet position in the dual grid
-            const Vector2 origin = { TILE_SIZE / 2.0f, TILE_SIZE / 2.0f };
+            const Vector2 origin = {TILE_SIZE / 2.0f, TILE_SIZE / 2.0f};
 
             DrawTexturePro(
                 texture,
@@ -64,6 +64,20 @@ static void DrawTileLayer(const TileMap* tilemap, const TileCodes tile_type_to_d
                 t.rotation,
                 WHITE
             );
+        }
+    }
+}
+
+void DrawTileMapDebugGrid(const TileMap* tilemap)
+{
+    for (int y = 0; y < tilemap->height; y++)
+    {
+        for (int x = 0; x < tilemap->width; x++)
+        {
+            int pos_x = x * TILE_SIZE;
+            int pos_y = y * TILE_SIZE;
+
+            DrawRectangleLines(pos_x, pos_y, TILE_SIZE, TILE_SIZE, RED);
         }
     }
 }
@@ -83,7 +97,7 @@ void DrawTileMap(const TileMap* tilemap)
             DrawTextureRec(
                 assets.tileset_gras,
                 grassTile,
-                (Vector2){ x * TILE_SIZE, y * TILE_SIZE },
+                (Vector2){x * TILE_SIZE, y * TILE_SIZE},
                 WHITE
             );
         }
