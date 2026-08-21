@@ -3,10 +3,13 @@
 #include "../include/tilemap.h"
 #include "raymath.h"
 #include "../include/assets.h"
+#include "../include/enemy.h"
+#include "../include/world.h"
 
 void DrawPlayer(Player* player)
 {
     DrawSprite(&player->sprite, player->position);
+    DrawText(TextFormat("(%d,%f)", player->hp, player->weapon_cooldown), player->position.x + TILE_SIZE, player->position.y + TILE_SIZE, 5, WHITE);
 }
 
 void CreatePlayer(Player* player, const Texture2D texture)
@@ -31,7 +34,7 @@ void MovePlayer(Player* player, const TileMap* tilemap)
 
     Vector2 new_position = player->position;
     Vector2 move_vector = {0, 0};
-    Direction current_direction = IDLE;
+    Directions current_direction = IDLE;
 
     //Get the input
     if (IsKeyDown(KEY_W))
@@ -103,5 +106,61 @@ void MovePlayer(Player* player, const TileMap* tilemap)
     {
         Reset(&player->sprite.anim);
         player->current_direction = current_direction;
+    }
+}
+
+static Vector2 DirectionToVector(int direction)
+{
+    switch (direction)
+    {
+    case UP: return (Vector2){0, -1};
+    case DOWN: return (Vector2){0, 1};
+    case LEFT: return (Vector2){-1, 0};
+    case RIGHT: return (Vector2){1, 0};
+    case IDLE: return (Vector2){0, 1};
+    }
+    return (Vector2){0, 0};
+}
+
+void UpdatePlayer(Player* player, World* world)
+{
+    player->weapon_cooldown -= GetFrameTime();
+    if (player->weapon_cooldown < 0) player->weapon_cooldown = 0;
+
+    if (!IsKeyDown(KEY_SPACE) || player->weapon_cooldown != 0) return;
+
+    for (int i = 0; i < world->enemy_count; i++)
+    {
+        Enemy* target = (world->enemies + i);
+        float distance_to_target = Vector2Distance(player->position, target->position);
+
+        if (distance_to_target <= player->weapon_RANGE)
+        {
+            Vector2 to_target = Vector2Normalize(Vector2Subtract(target->position, player->position));
+            float dot_product = Vector2DotProduct(DirectionToVector(player->current_direction), to_target);
+
+            if (dot_product >= 0.0f)
+            {
+                target->hp -= player->weapon_damage;
+            }
+        }
+    }
+    player->weapon_cooldown = player->hit_rate;
+}
+
+void AquireWeapon(Player* player, Weapons weapon)
+{
+    switch (weapon)
+    {
+    case UNARMED: player->weapon_damage = 5;
+        player->weapon_cooldown = 0.f;
+        player->hit_rate = 1.f;
+        player->weapon_RANGE = ENEMY_HIT_RADIUS + 10;
+        break;
+    case SWORD: player->weapon_damage = 10;
+        player->weapon_cooldown = 0.f;
+        player->hit_rate = 2.f;
+        player->weapon_RANGE = ENEMY_HIT_RADIUS + 20;
+        break;
     }
 }

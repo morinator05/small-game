@@ -1,7 +1,7 @@
 #ifndef TESTGAME2_ENEMY_H
 #define TESTGAME2_ENEMY_H
-#include "player.h"
 #include "sprite.h"
+#include "tilemap.h"
 
 #define ENEMY_HIT_RADIUS 10
 
@@ -17,17 +17,20 @@
 #define ENEMY_WIZ_TRIGGER_DISTANCE 100
 #define ENEMY_WIZ_HIT_RATE 2.f
 
+typedef struct Player Player;
+
 typedef enum
 {
     RED_SLIME,
     WIZ,
 } Type;
 
-typedef struct
+typedef struct Enemy
 {
     Type type;
     Sprite sprite;
     Vector2 position;
+    bool alive;
     int hp;
     int velocity;
     bool angry;

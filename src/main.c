@@ -24,6 +24,7 @@ int main()
     Player player;
     CreatePlayer(&player, assets.spritesheet_player);
     player.position = (Vector2){40.f, 20.f};
+    AquireWeapon(&player, SWORD);
 
     TileMap level;
     CreateLevel1(&level, assets);
@@ -55,7 +56,8 @@ int main()
         camera.target = player.position;
         MovePlayer(&player, &world.map);
         UpdateWorld(&world, &player);
-        UpdateEditor(&world.map, camera);
+        UpdatePlayer(&player, &world);
+        //UpdateEditor(&world.map, camera);
 
         BeginDrawing();
 
@@ -66,7 +68,6 @@ int main()
         EndMode2D();
 
         DrawText(TextFormat("FPS: %d", GetFPS()), GetScreenWidth() / 2 - 40, 0, 20, WHITE);
-        GuiProgressBar((Rectangle){0, 0, 150, 25}, "0", "max", &player.hp, 0, PLAYER_DEFAULT_HP);
 
         EndDrawing();
     }

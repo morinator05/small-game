@@ -1,11 +1,14 @@
 #ifndef TESTGAME2_WORLD_H
 #define TESTGAME2_WORLD_H
-#include "enemy.h"
+#include <raylib.h>
 
-#endif //TESTGAME2_WORLD_H
+#include "enemy.h"
+#include "tilemap.h"
 
 #define MAX_ENEMIES 100
 #define MAX_TRIGGERS 10
+
+typedef Enemy Enemy;
 
 typedef struct
 {
@@ -14,7 +17,7 @@ typedef struct
     Vector2 target_spawn;
 } WorldTrigger;
 
-typedef struct
+typedef struct World
 {
     int id;
     TileMap map;
@@ -32,3 +35,5 @@ bool AddTriggerToWorld(World* world, Rectangle bounds, int target_world_id, Vect
 
 void UpdateWorld(World* world, void* player);
 void DrawWorld(World* world);
+
+#endif //TESTGAME2_WORLD_H
