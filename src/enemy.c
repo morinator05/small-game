@@ -3,7 +3,7 @@
 #include <raymath.h>
 #include "../include/player.h"
 
-void CreateRedSlime(Enemy* enemy, Texture2D texture)
+void CreateRedSlime(Enemy* enemy)
 {
     const auto enemy_anim = (Animation){
         .first = ANIM_FRAME_FIRST,
@@ -12,7 +12,7 @@ void CreateRedSlime(Enemy* enemy, Texture2D texture)
     };
 
     const auto enemy_sprite = (Sprite){
-        .texture = texture,
+        .texture = assets.spritesheet_red_slime,
         .frames_per_line = ANIM_FRAMES_PER_LINE,
         .anim = enemy_anim
     };
@@ -91,7 +91,7 @@ void UpdateRedSlime(Enemy* enemy, TileMap* map, Player* player)
 
 }
 
-void CreateWiz(Enemy* enemy, Texture2D texture)
+void CreateWiz(Enemy* enemy)
 {
     const auto enemy_anim = (Animation){
         .first = 0,
@@ -102,7 +102,7 @@ void CreateWiz(Enemy* enemy, Texture2D texture)
     };
 
     const auto enemy_sprite = (Sprite){
-        .texture = texture,
+        .texture = assets.spritesheet_dark_wiz,
         .frames_per_line = 4,
         .origin = {0, 0},
         .rotation = 0.0f,

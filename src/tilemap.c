@@ -1,6 +1,6 @@
 #include <raylib.h>
 #include "../include/tilemap.h"
-
+#include "../include/assets.h"
 #include <math.h>
 
 void DestroyTileMap(TileMap* tilemap)
@@ -81,7 +81,7 @@ void DrawTileMap(const TileMap* tilemap)
                 TILE_SIZE
             };
             DrawTextureRec(
-                tilemap->assets.tileset_gras,
+                assets.tileset_gras,
                 grassTile,
                 (Vector2){ x * TILE_SIZE, y * TILE_SIZE },
                 WHITE
@@ -90,8 +90,8 @@ void DrawTileMap(const TileMap* tilemap)
     }
 
     //Draw the layers from dirt -> water -> ...coming soon
-    DrawTileLayer(tilemap, TILE_DIRT, tilemap->assets.tileset_dirt);
-    DrawTileLayer(tilemap, TILE_WATER, tilemap->assets.tileset_water);
+    DrawTileLayer(tilemap, TILE_DIRT, assets.tileset_dirt);
+    DrawTileLayer(tilemap, TILE_WATER, assets.tileset_water);
 }
 
 

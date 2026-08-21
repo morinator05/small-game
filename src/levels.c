@@ -34,10 +34,9 @@ static int mapLevel1[] = {
     -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1
 };
 
-void CreateLevel1(TileMap* tilemap, const Assets assets)
+void CreateLevel1(TileMap* tilemap)
 {
     tilemap->height = 30;
     tilemap->width = 30;
     tilemap->tiles = mapLevel1;
-    tilemap->assets = assets;
 }

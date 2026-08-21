@@ -61,8 +61,6 @@ typedef struct
     int width;
     int height;
     int* tiles;
-
-    Assets assets;
 } TileMap;
 
 void DrawTileMap(const TileMap* tilemap);

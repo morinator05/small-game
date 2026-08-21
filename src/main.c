@@ -16,27 +16,25 @@ int main()
     InitWindow(GetMonitorWidth(0), GetMonitorHeight(0), "Yet Another 2D Adventure Game");
     SetTargetFPS(GetMonitorRefreshRate(0));
 
-    //Load the assets
-    Assets assets;
-    LoadAssets(&assets);
+    LoadAssets();
 
     //create a spritesheet_player
     Player player;
-    CreatePlayer(&player, assets.spritesheet_player);
+    CreatePlayer(&player);
     player.position = (Vector2){40.f, 20.f};
     AcquireWeapon(&player, SWORD);
 
     TileMap level;
-    CreateLevel1(&level, assets);
+    CreateLevel1(&level);
 
     World world;
     CreateWorld(&world, 0, level);
 
     Enemy enemy;
-    CreateRedSlime(&enemy, assets.spritesheet_red_slime);
+    CreateRedSlime(&enemy);
     enemy.position = (Vector2){20, 20};
     AddEnemyToWorld(&world, enemy);
-    CreateWiz(&enemy, assets.spritesheet_dark_wiz);
+    CreateWiz(&enemy);
     enemy.position = (Vector2) {100 ,200};
     AddEnemyToWorld(&world, enemy);
 
@@ -50,6 +48,8 @@ int main()
         GetScreenWidth() / 2.0f,
         GetScreenHeight() / 2.0f
     };
+
+    PlaySound(assets.ambient_forrest);
 
     while (!WindowShouldClose())
     {
@@ -72,6 +72,6 @@ int main()
         EndDrawing();
     }
 
-    UnloadAssets(&assets);
+    UnloadAssets();
     CloseWindow();
 }
