@@ -46,9 +46,6 @@ void DrawPlayer(Player* player)
 {
     DrawSprite(&player->sprite, player->position);
     DrawPlayerAttack(player);
-
-    DrawText(TextFormat("(%d,%f)", player->hp, player->weapon.cooldown), player->position.x + TILE_SIZE,
-             player->position.y + TILE_SIZE, 5, WHITE);
 }
 
 void CreatePlayer(Player* player)
@@ -64,6 +61,7 @@ void CreatePlayer(Player* player)
         .speed = ANIM_SPEED,
     };
     player->hp = PLAYER_DEFAULT_HP;
+    player->is_attacking = false;
 }
 
 static TileCodes TileBeneathPlayer(const Player* player, const TileMap* tilemap)

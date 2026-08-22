@@ -104,7 +104,9 @@ void DrawTileMap(const TileMap* tilemap)
     }
 
     //Draw the layers from dirt -> water -> ...coming soon
+    DrawTileLayer(tilemap, TILE_SAND, assets.tileset_sand);
     DrawTileLayer(tilemap, TILE_DIRT, assets.tileset_dirt);
+    DrawTileLayer(tilemap, TILE_BORDER, assets.tileset_border);
     DrawTileLayer(tilemap, TILE_WATER, assets.tileset_water);
 }
 

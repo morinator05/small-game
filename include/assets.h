@@ -23,6 +23,8 @@ typedef struct
     Texture2D tileset_water;
     Texture2D tileset_dirt;
     Texture2D tileset_gras;
+    Texture2D tileset_sand;
+    Texture2D tileset_border;
 
     //Spritesheets
     Texture2D spritesheet_player;

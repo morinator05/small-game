@@ -144,5 +144,4 @@ void UpdateEnemy(Enemy* enemy, TileMap* map, Player* player)
 void DrawEnemy(Enemy* enemy)
 {
     DrawSprite(&enemy->sprite, enemy->position);
-    DrawText(TextFormat("(%d,%f)",  enemy->hp, enemy->hit_cooldown), enemy->position.x + TILE_SIZE, enemy->position.y + TILE_SIZE, 2, RED);
 }
