@@ -40,6 +40,8 @@ typedef struct Player
     Vector2 position;
     int velocity;
     int hp;
+    bool is_attacking;
+    float attack_progress;
     Weapon weapon;
     Directions current_direction;
 } Player;

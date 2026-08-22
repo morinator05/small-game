@@ -6,9 +6,47 @@
 #include "../include/enemy.h"
 #include "../include/world.h"
 
+static void DrawPlayerAttack(Player* player)
+{
+    if (player->is_attacking && player->weapon.type != UNARMED)
+    {
+        player->attack_progress += GetFrameTime() * 10;
+        int dest_x = player->position.x + TILE_SIZE / 2;
+        int dest_y = player->position.y + TILE_SIZE / 2;
+
+        float rotation = 180.f;
+        switch (player->current_direction)
+        {
+        case UP: rotation -= 180.f;
+            break;
+        case RIGHT: rotation -= 90.f;
+            break;
+        case LEFT: rotation += 90.f;
+            break;
+        }
+
+        Texture2D texture;
+        if (player->weapon.type == SWORD)
+        {
+            texture = assets.spritesheet_sword;
+            if (!IsSoundPlaying(assets.sfx_sword)) PlaySound(assets.sfx_sword);
+        }
+
+        DrawTexturePro(assets.spritesheet_sword,
+                       (Rectangle){0, 0, TILE_SIZE,TILE_SIZE},
+                       (Rectangle){dest_x, dest_y,TILE_SIZE,TILE_SIZE},
+                       (Vector2){TILE_SIZE / 2, TILE_SIZE},
+                       rotation + player->attack_progress * 90.f,
+                       WHITE
+        );
+    }
+}
+
 void DrawPlayer(Player* player)
 {
     DrawSprite(&player->sprite, player->position);
+    DrawPlayerAttack(player);
+
     DrawText(TextFormat("(%d,%f)", player->hp, player->weapon.cooldown), player->position.x + TILE_SIZE,
              player->position.y + TILE_SIZE, 5, WHITE);
 }
@@ -132,7 +170,7 @@ void MovePlayer(Player* player, const TileMap* tilemap)
         break;
     }
 
-    if (player->current_direction != current_direction)
+    if (!player->is_attacking && player->current_direction != current_direction)
     {
         Reset(&player->sprite.anim);
         player->current_direction = current_direction;
@@ -157,7 +195,18 @@ void UpdatePlayer(Player* player, World* world)
     player->weapon.cooldown -= GetFrameTime();
     if (player->weapon.cooldown < 0) player->weapon.cooldown = 0;
 
-    if (!IsKeyDown(KEY_SPACE) || player->weapon.cooldown != 0) return;
+    if (!IsKeyDown(KEY_SPACE) || player->weapon.cooldown != 0)
+    {
+        if (player->attack_progress >= 1.f)
+        {
+            //The attack is finished
+            player->is_attacking = false;
+            player->attack_progress = -1.f;
+        }
+        return;
+    }
+
+    player->is_attacking = true;
 
     for (int i = 0; i < world->enemy_count; i++)
     {
@@ -171,6 +220,7 @@ void UpdatePlayer(Player* player, World* world)
 
             if (dot_product >= 0.0f)
             {
+                PlaySound(assets.sfx_hit);
                 target->hp -= player->weapon.damage;
             }
         }
@@ -184,15 +234,15 @@ void AcquireWeapon(Player* player, WeaponTypes weapon_type)
     {
     case UNARMED: player->weapon = (Weapon){
             .type = UNARMED,
-            .damage = 10,
-            .hit_rate = 1.f,
+            .damage = 5,
+            .hit_rate = .15f,
             .reach = 20
         };
         break;
     case SWORD: player->weapon = (Weapon){
             .type = SWORD,
-            .damage = 50,
-            .hit_rate = 1.5f,
+            .damage = 20,
+            .hit_rate = 1.f,
             .reach = 40
         };
     }

@@ -15,6 +15,9 @@ void LoadAssets()
     assets.player_walk_dirt = LoadSound("asset/sounds/walking/dirt.mp3");
     assets.player_walk_gras = LoadSound("asset/sounds/walking/grass.mp3");
     assets.ambient_forrest = LoadSound("asset/sounds/ambient/forrest.mp3");
+
+    assets.sfx_sword = LoadSound("asset/sounds/sfx/sword.mp3");
+    assets.sfx_hit = LoadSound("asset/sounds/sfx/hit.mp3");
 }
 
 void UnloadAssets()
@@ -30,4 +33,7 @@ void UnloadAssets()
     UnloadSound(assets.player_walk_dirt);
     UnloadSound(assets.player_walk_gras);
     UnloadSound(assets.ambient_forrest);
+
+    UnloadSound(assets.sfx_sword);
+    UnloadSound(assets.sfx_hit);
 }

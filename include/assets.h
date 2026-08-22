@@ -39,6 +39,10 @@ typedef struct
     Sound player_walk_gras;
     Sound player_walk_dirt;
     Sound player_walk_sand;
+
+    //Sfx
+    Sound sfx_sword;
+    Sound sfx_hit;
 } Assets;
 
 extern Assets assets;
