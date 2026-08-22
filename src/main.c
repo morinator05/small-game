@@ -68,7 +68,7 @@ int main()
 
         BeginMode2D(camera);
         DrawWorld(&world);
-        DrawTileMapDebugGrid(&world.map);
+        //DrawTileMapDebugGrid(&world.map);
         DrawPlayer(&player);
         EndMode2D();
 
