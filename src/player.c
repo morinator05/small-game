@@ -203,7 +203,6 @@ void UpdatePlayer(Player* player, World* world)
         }
         return;
     }
-
     player->is_attacking = true;
 
     for (int i = 0; i < world->enemy_count; i++)
@@ -213,8 +212,8 @@ void UpdatePlayer(Player* player, World* world)
 
         if (distance_to_target <= player->weapon.reach)
         {
-            Vector2 to_target = Vector2Normalize(Vector2Subtract(target->position, player->position));
-            float dot_product = Vector2DotProduct(DirectionToVector(player->current_direction), to_target);
+            const Vector2 to_target = Vector2Normalize(Vector2Subtract(target->position, player->position));
+            const float dot_product = Vector2DotProduct(DirectionToVector(player->current_direction), to_target);
 
             if (dot_product >= 0.0f)
             {
