@@ -61,7 +61,7 @@ int main()
     {
         if (!IsSoundPlaying(assets.ambient_forrest)) PlaySound(assets.ambient_forrest);
 
-        camera.target = Vector2Add(player.position, (Vector2){TILE_SIZE / 2,0});
+        camera.target = Vector2Add(player.position, (Vector2){TILE_SIZE / 2, 0});
         MovePlayer(&player, &world.map);
         UpdateWorld(&world, &player);
         UpdatePlayer(&player, &world);
@@ -79,11 +79,25 @@ int main()
         DrawPlayer(&player);
         EndMode2D();
 
-        DrawText(TextFormat("FPS: %d", GetFPS()), GetScreenWidth() / 2 - 40, 0, 18, WHITE);
-        DrawText(TextFormat("Sound: %f", GetMasterVolume()), 0, 0, 20, WHITE);
-        DrawText(TextFormat("(%d, %d)", (int)(TILE_SIZE / 2 + player.position.x) / TILE_SIZE,
-                            (int)player.position.y / TILE_SIZE + 1), 0, 20, 18, WHITE);
-        DrawText(TextFormat("(atck:%f)", player.attack_progress), 0, 40, 18, WHITE);
+        DrawText(TextFormat("FPS: %d", GetFPS()), GetScreenWidth() / 2 - 40, 0, 28, RAYWHITE);
+
+        DrawText(
+            TextFormat("(%d, %.2f)", player.hp, player.weapon.cooldown),
+            GetWorldToScreen2D(player.position, camera).x,
+            GetWorldToScreen2D(player.position, camera).y,
+            38,
+            RAYWHITE
+        );
+        for (int i = 0; i < world.enemy_count; i++)
+        {
+            DrawText(
+            TextFormat("(%d, %.2f)", world.enemies[i].hp, world.enemies[i].hit_cooldown),
+            GetWorldToScreen2D(world.enemies[i].position, camera).x,
+            GetWorldToScreen2D(world.enemies[i].position, camera).y,
+            38,
+            RAYWHITE
+        );
+        }
 
         EndDrawing();
     }

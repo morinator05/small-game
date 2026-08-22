@@ -8,6 +8,8 @@ void LoadAssets()
     assets.tileset_gras = LoadTexture("asset/tiles/gras.png");
     assets.tileset_dirt = LoadTexture("asset/tiles/dirt.png");
     assets.tileset_water = LoadTexture("asset/tiles/water.png");
+    assets.tileset_sand = LoadTexture("asset/tiles/sand.png");
+    assets.tileset_border = LoadTexture("asset/tiles/border.png");
     assets.spritesheet_red_slime = LoadTexture("asset/sprites/slime_red.png");
     assets.spritesheet_dark_wiz = LoadTexture("asset/sprites/purple_wizard.png");
     assets.spritesheet_sword = LoadTexture("asset/weapons/sword.png");
@@ -26,6 +28,8 @@ void UnloadAssets()
     UnloadTexture(assets.tileset_dirt);
     UnloadTexture(assets.tileset_water);
     UnloadTexture(assets.tileset_gras);
+    UnloadTexture(assets.tileset_sand);
+    UnloadTexture(assets.tileset_border);
     UnloadTexture(assets.spritesheet_red_slime);
     UnloadTexture(assets.spritesheet_dark_wiz);
     UnloadTexture(assets.spritesheet_sword);
