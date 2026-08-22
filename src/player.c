@@ -25,14 +25,14 @@ static void DrawPlayerAttack(Player* player)
             break;
         }
 
-        Texture2D texture;
+        Texture2D texture = {0};
         if (player->weapon.type == SWORD)
         {
             texture = assets.spritesheet_sword;
             if (!IsSoundPlaying(assets.sfx_sword)) PlaySound(assets.sfx_sword);
         }
 
-        DrawTexturePro(assets.spritesheet_sword,
+        DrawTexturePro(texture,
                        (Rectangle){0, 0, TILE_SIZE,TILE_SIZE},
                        (Rectangle){dest_x, dest_y,TILE_SIZE,TILE_SIZE},
                        (Vector2){TILE_SIZE / 2, TILE_SIZE},

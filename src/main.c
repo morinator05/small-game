@@ -8,6 +8,8 @@
 #include "../include/world.h"
 
 #define RAYGUI_IMPLEMENTATION
+#include <raymath.h>
+
 #include "../include/raygui.h"
 
 int main()
@@ -53,22 +55,27 @@ int main()
         GetScreenHeight() / 2.0f
     };
 
+    bool editor_mode = false;
+
     while (!WindowShouldClose())
     {
         if (!IsSoundPlaying(assets.ambient_forrest)) PlaySound(assets.ambient_forrest);
 
-        camera.target = player.position;
+        camera.target = Vector2Add(player.position, (Vector2){TILE_SIZE / 2,0});
         MovePlayer(&player, &world.map);
         UpdateWorld(&world, &player);
         UpdatePlayer(&player, &world);
-        UpdateEditor(&world.map, camera);
+
+        if (IsKeyPressed(KEY_F1)) editor_mode = !editor_mode;
+        if (editor_mode) UpdateEditor(&world.map, camera);
+
 
         BeginDrawing();
         ClearBackground(BLACK);
 
         BeginMode2D(camera);
         DrawWorld(&world);
-        //DrawTileMapDebugGrid(&world.map);
+        if (editor_mode) DrawTileMapDebugGrid(&world.map);
         DrawPlayer(&player);
         EndMode2D();
 
