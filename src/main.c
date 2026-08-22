@@ -28,7 +28,7 @@ int main()
     Player player;
     CreatePlayer(&player);
     player.position = (Vector2){40.f, 20.f};
-    AcquireWeapon(&player, UNARMED);
+    AcquireWeapon(&player, SWORD);
 
     TileMap level;
     CreateLevel1(&level);
@@ -72,10 +72,12 @@ int main()
         DrawPlayer(&player);
         EndMode2D();
 
-        DrawText(TextFormat("FPS: %d", GetFPS()), GetScreenWidth() / 2 - 40, 0, 20, WHITE);
+        DrawText(TextFormat("FPS: %d", GetFPS()), GetScreenWidth() / 2 - 40, 0, 18, WHITE);
         DrawText(TextFormat("Sound: %f", GetMasterVolume()), 0, 0, 20, WHITE);
         DrawText(TextFormat("(%d, %d)", (int)(TILE_SIZE / 2 + player.position.x) / TILE_SIZE,
-                            (int)player.position.y / TILE_SIZE + 1), 0, 20, 20, WHITE);
+                            (int)player.position.y / TILE_SIZE + 1), 0, 20, 18, WHITE);
+        DrawText(TextFormat("(atck:%f)", player.attack_progress), 0, 40, 18, WHITE);
+
         EndDrawing();
     }
 
