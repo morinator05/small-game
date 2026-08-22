@@ -69,6 +69,7 @@ void UpdateRedSlime(Enemy* enemy, TileMap* map, Player* player)
 
         if (Vector2Distance(player->position, enemy->position) <= enemy->hit_radius && enemy->hit_cooldown <= 0)
         {
+            PlaySound(assets.sfx_hit);
             player->hp -= enemy->damage_per_hit;
             enemy->hit_cooldown = enemy->hit_rate;
         }

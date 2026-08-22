@@ -11,8 +11,8 @@ static void DrawPlayerAttack(Player* player)
     if (player->is_attacking && player->weapon.type != UNARMED)
     {
         player->attack_progress += GetFrameTime() * 10;
-        int dest_x = player->position.x + TILE_SIZE / 2;
-        int dest_y = player->position.y + TILE_SIZE / 2;
+        const float dest_x = player->position.x + (float)TILE_SIZE / 2;
+        const float dest_y = player->position.y + (float)TILE_SIZE / 2;
 
         float rotation = 180.f;
         switch (player->current_direction)
@@ -35,7 +35,7 @@ static void DrawPlayerAttack(Player* player)
         DrawTexturePro(texture,
                        (Rectangle){0, 0, TILE_SIZE,TILE_SIZE},
                        (Rectangle){dest_x, dest_y,TILE_SIZE,TILE_SIZE},
-                       (Vector2){TILE_SIZE / 2, TILE_SIZE},
+                       (Vector2){(float)TILE_SIZE / 2, TILE_SIZE},
                        rotation + player->attack_progress * 90.f,
                        WHITE
         );
@@ -66,9 +66,9 @@ void CreatePlayer(Player* player)
 
 static TileCodes TileBeneathPlayer(const Player* player, const TileMap* tilemap)
 {
-    Vector2 pos = player->position;
-    int x = (pos.x + TILE_SIZE / 2) / TILE_SIZE;
-    int y = pos.y / TILE_SIZE + 1;
+    const Vector2 pos = player->position;
+    int x = ((int)pos.x + TILE_SIZE / 2) / TILE_SIZE;
+    int y = (int)pos.y / TILE_SIZE + 1;
     if (x < 0 || x >= tilemap->width || y < 0 || y >= tilemap->height)
     {
         return 0;
@@ -128,7 +128,7 @@ void MovePlayer(Player* player, const TileMap* tilemap)
         move_vector = Vector2Normalize(move_vector);
         move_vector = Vector2Scale(move_vector, distance);
     }
-    float length = Vector2Length(move_vector);
+    const float length = Vector2Length(move_vector);
 
     if (length > 0.0f)
     {
@@ -175,7 +175,7 @@ void MovePlayer(Player* player, const TileMap* tilemap)
     }
 }
 
-static Vector2 DirectionToVector(int direction)
+static Vector2 DirectionToVector(const int direction)
 {
     switch (direction)
     {
@@ -184,7 +184,7 @@ static Vector2 DirectionToVector(int direction)
     case LEFT: return (Vector2){-1, 0};
     case RIGHT: return (Vector2){1, 0};
     case IDLE: return (Vector2){0, 1};
-    default: return (Vector2){0, 0};;
+    default: return (Vector2){0, 0};
     }
 }
 
@@ -208,8 +208,8 @@ void UpdatePlayer(Player* player, World* world)
 
     for (int i = 0; i < world->enemy_count; i++)
     {
-        Enemy* target = (world->enemies + i);
-        float distance_to_target = Vector2Distance(player->position, target->position);
+        Enemy* target = world->enemies + i;
+        const float distance_to_target = Vector2Distance(player->position, target->position);
 
         if (distance_to_target <= player->weapon.reach)
         {
@@ -226,7 +226,7 @@ void UpdatePlayer(Player* player, World* world)
     player->weapon.cooldown = player->weapon.hit_rate;
 }
 
-void AcquireWeapon(Player* player, WeaponTypes weapon_type)
+void AcquireWeapon(Player* player, const WeaponTypes weapon_type)
 {
     switch (weapon_type)
     {

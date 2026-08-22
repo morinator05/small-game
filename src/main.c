@@ -15,6 +15,7 @@
 int main()
 {
     //Innit the Window
+    SetConfigFlags(FLAG_VSYNC_HINT);
     InitWindow(GetMonitorWidth(0), GetMonitorHeight(0), "Yet Another 2D Adventure Game");
     SetTargetFPS(GetMonitorRefreshRate(0));
 
@@ -23,6 +24,7 @@ int main()
     {
         return EXIT_FAILURE;
     }
+    SetMasterVolume(.25);
 
     LoadAssets();
 
@@ -61,7 +63,7 @@ int main()
     {
         if (!IsSoundPlaying(assets.ambient_forrest)) PlaySound(assets.ambient_forrest);
 
-        camera.target = Vector2Add(player.position, (Vector2){TILE_SIZE / 2, 0});
+        camera.target = Vector2Add(player.position, (Vector2){(float)TILE_SIZE / 2, 0});
         MovePlayer(&player, &world.map);
         UpdateWorld(&world, &player);
         UpdatePlayer(&player, &world);
@@ -84,7 +86,7 @@ int main()
         DrawText(
             TextFormat("(%d, %.2f)", player.hp, player.weapon.cooldown),
             GetWorldToScreen2D(player.position, camera).x,
-            GetWorldToScreen2D(player.position, camera).y,
+            GetWorldToScreen2D(player.position, camera).y - 50,
             38,
             RAYWHITE
         );

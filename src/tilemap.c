@@ -20,9 +20,9 @@ static int GetTileBit(const TileMap* tilemap, const int x, const int y, const Ti
 
 static void DrawTileLayer(const TileMap* tilemap, const TileCodes tile_type_to_draw, const Texture2D texture)
 {
-    for (int y = 0; y <= tilemap->height; y++)
+    for (int y = 0; y < tilemap->height; y++)
     {
-        for (int x = 0; x <= tilemap->width; x++)
+        for (int x = 0; x < tilemap->width; x++)
         {
             int top_left = GetTileBit(tilemap, x - 1, y - 1, tile_type_to_draw);
             int top_right = GetTileBit(tilemap, x, y - 1, tile_type_to_draw);
@@ -123,8 +123,8 @@ bool CheckCollisionWithMap(const TileMap* tilemap, const Rectangle playerRect)
                 continue;
 
             const Rectangle tile_rect = {
-                x * TILE_SIZE,
-                y * TILE_SIZE,
+                (float)x * TILE_SIZE,
+                (float)y * TILE_SIZE,
                 TILE_SIZE,
                 TILE_SIZE
             };
@@ -145,10 +145,10 @@ bool CheckCollisionWithMap(const TileMap* tilemap, const Rectangle playerRect)
 //very basic editor
 void UpdateEditor(const TileMap* map, const Camera2D camera)
 {
-    Vector2 mouse_world_pos = GetScreenToWorld2D(GetMousePosition(), camera);
+    const Vector2 mouse_world_pos = GetScreenToWorld2D(GetMousePosition(), camera);
 
-    int tile_x = (int)floorf(mouse_world_pos.x / TILE_SIZE);
-    int tile_y = (int)floor(mouse_world_pos.y / TILE_SIZE);
+    const int tile_x = (int)floorf(mouse_world_pos.x / TILE_SIZE);
+    const int tile_y = (int)floor(mouse_world_pos.y / TILE_SIZE);
 
     if (tile_x >= 0 && tile_x < map->width && tile_y >= 0 && tile_y < map->height)
     {

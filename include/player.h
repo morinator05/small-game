@@ -38,7 +38,7 @@ typedef struct Player
 {
     Sprite sprite;
     Vector2 position;
-    int velocity;
+    float velocity;
     int hp;
     bool is_attacking;
     float attack_progress;
