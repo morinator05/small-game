@@ -14,6 +14,7 @@
 typedef enum
 {
     TILE_BORDER = -1,
+    TILE_VOID = 0,
     TILE_GRASS = 1,
     TILE_SAND = 2,
     TILE_DIRT = 3,

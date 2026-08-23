@@ -47,5 +47,5 @@ void CreateEmptyLevel(TileMap* tilemap)
 {
     tilemap->height = DEFAULT_HEIGHT;
     tilemap->width = DEFAULT_WIDTH;
-    tilemap->tiles = malloc(GetTilesDataSize(tilemap));
+    tilemap->tiles = calloc(1, GetTilesDataSize(tilemap));
 }

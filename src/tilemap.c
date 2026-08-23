@@ -99,6 +99,7 @@ void DrawTileMap(const TileMap* tilemap)
     {
         for (int x = 0; x < tilemap->width; x++)
         {
+            if (tilemap->tiles[y * tilemap->width + x] == 0) continue;
             const Rectangle grassTile = {
                 SOLID * TILE_SIZE,
                 0,
@@ -163,28 +164,35 @@ void UpdateEditor(const TileMap* map, const Camera2D camera)
 
     if (tile_x >= 0 && tile_x < map->width && tile_y >= 0 && tile_y < map->height)
     {
-        if (IsMouseButtonPressed(MOUSE_BUTTON_LEFT) && !IsKeyDown(KEY_LEFT_SHIFT))
+        if (IsKeyDown(KEY_LEFT_SHIFT))
         {
-            map->tiles[tile_y * map->width + tile_x] = TILE_DIRT;
-            PlaySound(assets.player_walk_dirt);
+            if (IsMouseButtonDown(MOUSE_BUTTON_LEFT))
+            {
+                map->tiles[tile_y * map->width + tile_x] = TILE_WATER;
+            }
+            else if (IsMouseButtonDown(MOUSE_BUTTON_RIGHT))
+            {
+                map->tiles[tile_y * map->width + tile_x] = TILE_SAND;
+            }
+            else if (IsMouseButtonDown(MOUSE_BUTTON_MIDDLE))
+            {
+                map->tiles[tile_y * map->width + tile_x] = TILE_VOID;
+            }
         }
-        else if (IsMouseButtonPressed(MOUSE_BUTTON_RIGHT) && !IsKeyDown(KEY_LEFT_SHIFT))
+        else
         {
-            map->tiles[tile_y * map->width + tile_x] = TILE_GRASS;
-            PlaySound(assets.player_walk_gras);
-        }
-        else if (IsMouseButtonPressed(MOUSE_BUTTON_MIDDLE) && !IsKeyDown(KEY_LEFT_SHIFT))
-        {
-            map->tiles[tile_y * map->width + tile_x] = TILE_BORDER;
-            PlaySound(assets.player_walk_gras);
-        }
-        else if (IsMouseButtonPressed(MOUSE_BUTTON_LEFT) && IsKeyDown(KEY_LEFT_SHIFT))
-        {
-            map->tiles[tile_y * map->width + tile_x] = TILE_WATER;
-        }
-        else if (IsMouseButtonPressed(MOUSE_BUTTON_RIGHT) && IsKeyDown(KEY_LEFT_SHIFT))
-        {
-            map->tiles[tile_y * map->width + tile_x] = TILE_SAND;
+            if (IsMouseButtonDown(MOUSE_BUTTON_LEFT))
+            {
+                map->tiles[tile_y * map->width + tile_x] = TILE_DIRT;
+            }
+            else if (IsMouseButtonDown(MOUSE_BUTTON_RIGHT))
+            {
+                map->tiles[tile_y * map->width + tile_x] = TILE_GRASS;
+            }
+            else if (IsMouseButtonDown(MOUSE_BUTTON_MIDDLE))
+            {
+                map->tiles[tile_y * map->width + tile_x] = TILE_BORDER;
+            }
         }
     }
 }

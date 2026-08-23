@@ -51,7 +51,7 @@ int main()
     Camera2D camera = {0};
     camera.target = player.position;
     camera.rotation = 0.0f;
-    camera.zoom = 7.0f;
+    camera.zoom = 4.0f;
     camera.offset = (Vector2){
         GetScreenWidth() / 2.0f,
         GetScreenHeight() / 2.0f
