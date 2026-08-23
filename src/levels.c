@@ -1,3 +1,5 @@
+#include <stdlib.h>
+
 #include "../include/assets.h"
 #include "../include/tilemap.h"
 
@@ -39,4 +41,11 @@ void CreateLevel1(TileMap* tilemap)
     tilemap->height = 30;
     tilemap->width = 30;
     tilemap->tiles = mapLevel1;
+}
+
+void CreateEmptyLevel(TileMap* tilemap)
+{
+    tilemap->height = DEFAULT_HEIGHT;
+    tilemap->width = DEFAULT_WIDTH;
+    tilemap->tiles = malloc(GetTilesDataSize(tilemap));
 }

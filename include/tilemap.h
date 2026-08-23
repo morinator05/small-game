@@ -1,10 +1,14 @@
 #ifndef TESTGAME2_TILEMAP_H
 #define TESTGAME2_TILEMAP_H
 #include <raylib.h>
+#include <stddef.h>
 
 #include "assets.h"
 
 #define PLAYER_MARGIN 4
+
+#define DEFAULT_WIDTH 64
+#define DEFAULT_HEIGHT 32
 
 //Tile identifiers in the actual game map
 typedef enum
@@ -63,10 +67,18 @@ typedef struct
     int* tiles;
 } TileMap;
 
+static size_t GetTilesDataSize(const TileMap *t)
+{
+    return (size_t)t->width * (size_t)t->height * sizeof(int);
+}
+
 void DrawTileMap(const TileMap* tilemap);
 void DestroyTileMap(TileMap* tilemap);
 bool CheckCollisionWithMap(const TileMap* tilemap, Rectangle playerRect);
 void UpdateEditor(const TileMap* map, Camera2D camera);
 void DrawTileMapDebugGrid(const TileMap* tilemap);
+
+void LoadTileMap(TileMap* tile_map, const char *file);
+void SaveTileMap(const TileMap* tile_map, const char *file);
 
 #endif //TESTGAME2_TILEMAP_H

@@ -1,11 +1,22 @@
 #include <raylib.h>
 #include "../include/tilemap.h"
+
+#include <errno.h>
+
 #include "../include/assets.h"
 #include <math.h>
+#include <sys/types.h>
+#include <sys/stat.h>
+#include <fcntl.h>
+#include <unistd.h>
+#include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
+
 
 void DestroyTileMap(TileMap* tilemap)
 {
-    //TODO
+    free(tilemap->tiles);
 }
 
 //Returns 1 if the Tile at the given position is of equal type with the given type.
@@ -106,8 +117,8 @@ void DrawTileMap(const TileMap* tilemap)
     //Draw the layers from dirt -> water -> ...coming soon
     DrawTileLayer(tilemap, TILE_SAND, assets.tileset_sand);
     DrawTileLayer(tilemap, TILE_DIRT, assets.tileset_dirt);
-    DrawTileLayer(tilemap, TILE_BORDER, assets.tileset_border);
     DrawTileLayer(tilemap, TILE_WATER, assets.tileset_water);
+    DrawTileLayer(tilemap, TILE_BORDER, assets.tileset_border);
 }
 
 
@@ -162,9 +173,79 @@ void UpdateEditor(const TileMap* map, const Camera2D camera)
             map->tiles[tile_y * map->width + tile_x] = TILE_GRASS;
             PlaySound(assets.player_walk_gras);
         }
+        else if (IsMouseButtonPressed(MOUSE_BUTTON_MIDDLE) && !IsKeyDown(KEY_LEFT_SHIFT))
+        {
+            map->tiles[tile_y * map->width + tile_x] = TILE_BORDER;
+            PlaySound(assets.player_walk_gras);
+        }
         else if (IsMouseButtonPressed(MOUSE_BUTTON_LEFT) && IsKeyDown(KEY_LEFT_SHIFT))
         {
             map->tiles[tile_y * map->width + tile_x] = TILE_WATER;
         }
+        else if (IsMouseButtonPressed(MOUSE_BUTTON_RIGHT) && IsKeyDown(KEY_LEFT_SHIFT))
+        {
+            map->tiles[tile_y * map->width + tile_x] = TILE_SAND;
+        }
     }
+}
+
+void LoadTileMap(TileMap* tile_map, const char* file)
+{
+
+
+    const mode_t mode = S_IRUSR | S_IWUSR | S_IRGRP | S_IROTH;
+    const int fd = open(file, O_RDONLY, mode);
+    if (fd < 0)
+    {
+        printf("Can't open file for reading: %s\n", strerror(errno));
+        return;
+    }
+
+    //Read map size
+    if (read(fd, &tile_map->width, sizeof(int)) != sizeof(int) || read(fd, &tile_map->height, sizeof(int)) != sizeof(int))
+    {
+        printf("Error reading map size: %s\n", strerror(errno));
+    }
+
+    size_t bytes_to_read = GetTilesDataSize(tile_map);
+    tile_map->tiles = calloc(1, bytes_to_read);
+    size_t bytes_read = read(fd, tile_map->tiles, bytes_to_read);
+    if (bytes_read != bytes_to_read)
+    {
+        printf("Error reading map data: %s\n", strerror(errno));
+    }
+
+    close(fd);
+    printf("Loaded %d tiles\n", tile_map->width * tile_map->height);
+}
+
+void SaveTileMap(const TileMap* tile_map, const char* file)
+{
+    printf("Starting writing tilemap: %s\n", file);
+
+    const mode_t mode = S_IRUSR | S_IWUSR | S_IRGRP | S_IROTH;
+    const int fd = open(file, O_WRONLY | O_CREAT | O_TRUNC, mode);
+    if (fd < 0)
+    {
+        printf("Error opening file for writing: %s\n", strerror(errno));
+        return;
+    }
+
+    //Write header
+    if (write(fd, &tile_map->width, sizeof(int)) != sizeof(int)
+        || write(fd, &tile_map->height, sizeof(int)) != sizeof(int))
+    {
+        printf("Error writing map size: %s\n", strerror(errno));
+    }
+
+    //Write map data
+    size_t bytes_to_write = GetTilesDataSize(tile_map);
+    size_t bytes_written = write(fd, tile_map->tiles, bytes_to_write);
+    if (bytes_written != bytes_to_write)
+    {
+        printf("Error writing tilemap data: %s\n", strerror(errno));
+    }
+
+    close(fd);
+    printf("Finished writing tilemap.\n");
 }

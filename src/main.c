@@ -35,7 +35,7 @@ int main()
     AcquireWeapon(&player, SWORD);
 
     TileMap level;
-    CreateLevel1(&level);
+    CreateEmptyLevel(&level);
 
     World world;
     CreateWorld(&world, 0, level);
@@ -61,6 +61,15 @@ int main()
 
     while (!WindowShouldClose())
     {
+
+        if (IsKeyPressed(KEY_J))
+        {
+            SaveTileMap(&world.map, "asset/maps/default_map.map");
+        } else if (IsKeyPressed(KEY_K))
+        {
+            LoadTileMap(&world.map, "asset/maps/default_map.map");
+        }
+
         if (!IsSoundPlaying(assets.ambient_forrest)) PlaySound(assets.ambient_forrest);
 
         camera.target = Vector2Add(player.position, (Vector2){(float)TILE_SIZE / 2, 0});
