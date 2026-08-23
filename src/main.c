@@ -83,7 +83,7 @@ int main()
 
 
         BeginDrawing();
-        ClearBackground(BLACK);
+        ClearBackground(DARKBLUE);
 
         BeginMode2D(camera);
         DrawWorld(&world);
@@ -95,13 +95,14 @@ int main()
 
         DrawText(
             TextFormat("(%d, %.2f)", player.hp, player.weapon.cooldown),
-            GetWorldToScreen2D(player.position, camera).x,
+            GetWorldToScreen2D(player.position, camera).x - (GetScreenWidth() / TILE_SIZE) / 2,
             GetWorldToScreen2D(player.position, camera).y - 50,
             38,
             RAYWHITE
         );
         for (int i = 0; i < world.enemy_count; i++)
         {
+            if (!world.enemies[i].alive) continue;
             DrawText(
             TextFormat("(%d, %.2f)", world.enemies[i].hp, world.enemies[i].hit_cooldown),
             GetWorldToScreen2D(world.enemies[i].position, camera).x,

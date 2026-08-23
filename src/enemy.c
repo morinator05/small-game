@@ -144,5 +144,6 @@ void UpdateEnemy(Enemy* enemy, TileMap* map, Player* player)
 
 void DrawEnemy(Enemy* enemy)
 {
+    if (!enemy->alive) return;
     DrawSprite(&enemy->sprite, enemy->position);
 }

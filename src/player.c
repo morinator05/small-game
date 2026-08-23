@@ -44,8 +44,16 @@ static void DrawPlayerAttack(Player* player)
 
 void DrawPlayer(Player* player)
 {
-    DrawSprite(&player->sprite, player->position);
-    DrawPlayerAttack(player);
+    if (player->is_attacking && player->current_direction == UP)
+    {
+        DrawPlayerAttack(player);
+        DrawSprite(&player->sprite, player->position);
+    } else
+    {
+        DrawSprite(&player->sprite, player->position);
+        DrawPlayerAttack(player);
+    }
+
 }
 
 void CreatePlayer(Player* player)
