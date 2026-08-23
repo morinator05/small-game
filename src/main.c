@@ -31,18 +31,19 @@ int main()
     //create a spritesheet_player
     Player player;
     CreatePlayer(&player);
-    player.position = (Vector2){40.f, 20.f};
+    player.position = (Vector2){ 4.f * TILE_SIZE, 3.f * TILE_SIZE };
     AcquireWeapon(&player, SWORD);
 
     TileMap level;
     CreateEmptyLevel(&level);
+    LoadTileMap(&level, "asset/maps/default_map.map");
 
     World world;
     CreateWorld(&world, 0, level);
 
     Enemy enemy;
     CreateRedSlime(&enemy);
-    enemy.position = (Vector2){20, 20};
+    enemy.position = (Vector2){20 * TILE_SIZE, 5 * TILE_SIZE};
     AddEnemyToWorld(&world, enemy);
     CreateWiz(&enemy);
     enemy.position = (Vector2){100, 200};
@@ -51,7 +52,7 @@ int main()
     Camera2D camera = {0};
     camera.target = player.position;
     camera.rotation = 0.0f;
-    camera.zoom = 4.0f;
+    camera.zoom = 6.0f;
     camera.offset = (Vector2){
         GetScreenWidth() / 2.0f,
         GetScreenHeight() / 2.0f
@@ -113,6 +114,8 @@ int main()
         EndDrawing();
     }
 
+    SaveTileMap(&world.map, "save.map");
+    DestroyTileMap(&world.map);
     UnloadAssets();
     CloseWindow();
 }
