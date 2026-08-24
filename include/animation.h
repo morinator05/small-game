@@ -16,7 +16,7 @@ void SetRow(Animation* anim, int row, int frames_per_row);
 
 void Reset(Animation* anim);
 
-void UpdateAnimation(Animation* animation);
+void UpdateAnimation(Animation* anim);
 
 Rectangle GetCurrentFrame(const Animation* animation, int frames_per_row);
 

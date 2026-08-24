@@ -1,11 +1,11 @@
 #include "../include/world.h"
 #include "../include/enemy.h"
 
-void CreateWorld(World* world, const int id, const TileMap map)
+void CreateWorld(World* world, const int id, const TileMap tile_map)
 {
     *world = (World){
         .id = id,
-        .map = map,
+        .tile_map = tile_map,
         .enemy_count = 0,
         .trigger_count = 0
     };
@@ -28,13 +28,13 @@ void UpdateWorld(World* world, void* player)
 {
     for (int i = 0; i < world->enemy_count; i++)
     {
-        UpdateEnemy(&world->enemies[i], &world->map, player);
+        UpdateEnemy(&world->enemies[i], &world->tile_map, player);
     }
 }
 
 void DrawWorld(World* world)
 {
-    DrawTileMap(&world->map);
+    DrawTileMap(&world->tile_map);
 
     for (int i = 0; i < world->enemy_count; i++)
     {

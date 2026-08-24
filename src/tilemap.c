@@ -14,19 +14,19 @@
 #include <string.h>
 
 
-void DestroyTileMap(TileMap* tilemap)
+void DestroyTileMap(const TileMap* tile_map)
 {
-    free(tilemap->tiles);
+    free(tile_map->tiles);
 }
 
 //Returns 1 if the Tile at the given position is of equal type with the given type.
-static int GetTileBit(const TileMap* tilemap, const int x, const int y, const TileCodes targetType)
+static int GetTileBit(const TileMap* tile_map, const int x, const int y, const TileCodes targetType)
 {
-    if (x < 0 || x >= tilemap->width || y < 0 || y >= tilemap->height)
+    if (x < 0 || x >= tile_map->width || y < 0 || y >= tile_map->height)
     {
         return 0;
     }
-    return tilemap->tiles[x + y * tilemap->width] == targetType ? 1 : 0;
+    return tile_map->tiles[x + y * tile_map->width] == targetType ? 1 : 0;
 }
 
 static void DrawTileLayer(const TileMap* tilemap, const TileCodes tile_type_to_draw, const Texture2D texture)
@@ -35,13 +35,13 @@ static void DrawTileLayer(const TileMap* tilemap, const TileCodes tile_type_to_d
     {
         for (int x = 0; x < tilemap->width; x++)
         {
-            int top_left = GetTileBit(tilemap, x - 1, y - 1, tile_type_to_draw);
-            int top_right = GetTileBit(tilemap, x, y - 1, tile_type_to_draw);
-            int bottom_left = GetTileBit(tilemap, x - 1, y, tile_type_to_draw);
-            int bottom_right = GetTileBit(tilemap, x, y, tile_type_to_draw);
+            const int top_left = GetTileBit(tilemap, x - 1, y - 1, tile_type_to_draw);
+            const int top_right = GetTileBit(tilemap, x, y - 1, tile_type_to_draw);
+            const int bottom_left = GetTileBit(tilemap, x - 1, y, tile_type_to_draw);
+            const int bottom_right = GetTileBit(tilemap, x, y, tile_type_to_draw);
 
             //create a mask consisting of the bits of each 4 adjacent tiles
-            int mask = top_left + (top_right << 1) + (bottom_left << 2) + (bottom_right << 3);
+            const int mask = top_left + (top_right << 1) + (bottom_left << 2) + (bottom_right << 3);
 
             //nothing to draw there, goto next
             if (mask == 0) continue;
@@ -57,14 +57,14 @@ static void DrawTileLayer(const TileMap* tilemap, const TileCodes tile_type_to_d
                 (float)TILE_SIZE
             };
             const Rectangle dest_rec = {
-                x * TILE_SIZE,
-                y * TILE_SIZE,
+                (float)x * TILE_SIZE,
+                (float)y * TILE_SIZE,
                 (float)TILE_SIZE,
                 (float)TILE_SIZE
             };
 
             //Set the origin for the rotation to the center of the tile
-            //Also shifts the tile to its intendet position in the dual grid
+            //Also shifts the tile to its intended position in the dual grid
             const Vector2 origin = {TILE_SIZE / 2.0f, TILE_SIZE / 2.0f};
 
             DrawTexturePro(
@@ -79,27 +79,27 @@ static void DrawTileLayer(const TileMap* tilemap, const TileCodes tile_type_to_d
     }
 }
 
-void DrawTileMapDebugGrid(const TileMap* tilemap)
+void DrawTileMapDebugGrid(const TileMap* tile_map)
 {
-    for (int y = 0; y < tilemap->height; y++)
+    for (int y = 0; y < tile_map->height; y++)
     {
-        for (int x = 0; x < tilemap->width; x++)
+        for (int x = 0; x < tile_map->width; x++)
         {
-            int pos_x = x * TILE_SIZE;
-            int pos_y = y * TILE_SIZE;
+            const int pos_x = x * TILE_SIZE;
+            const int pos_y = y * TILE_SIZE;
 
             DrawRectangleLines(pos_x, pos_y, TILE_SIZE, TILE_SIZE, RED);
         }
     }
 }
 
-void DrawTileMap(const TileMap* tilemap)
+void DrawTileMap(const TileMap* tile_map)
 {
-    for (int y = 0; y < tilemap->height; y++)
+    for (int y = 0; y < tile_map->height; y++)
     {
-        for (int x = 0; x < tilemap->width; x++)
+        for (int x = 0; x < tile_map->width; x++)
         {
-            if (tilemap->tiles[y * tilemap->width + x] == 0) continue;
+            if (tile_map->tiles[y * tile_map->width + x] == 0) continue;
             const Rectangle grassTile = {
                 SOLID * TILE_SIZE,
                 0,
@@ -116,20 +116,20 @@ void DrawTileMap(const TileMap* tilemap)
     }
 
     //Draw the layers from dirt -> water -> ...coming soon
-    DrawTileLayer(tilemap, TILE_SAND, assets.tileset_sand);
-    DrawTileLayer(tilemap, TILE_DIRT, assets.tileset_dirt);
-    DrawTileLayer(tilemap, TILE_WATER, assets.tileset_water);
-    DrawTileLayer(tilemap, TILE_BORDER, assets.tileset_border);
+    DrawTileLayer(tile_map, TILE_SAND, assets.tileset_sand);
+    DrawTileLayer(tile_map, TILE_DIRT, assets.tileset_dirt);
+    DrawTileLayer(tile_map, TILE_WATER, assets.tileset_water);
+    DrawTileLayer(tile_map, TILE_BORDER, assets.tileset_border);
 }
 
 
-bool CheckCollisionWithMap(const TileMap* tilemap, const Rectangle playerRect)
+bool CheckCollisionWithMap(const TileMap* tile_map, const Rectangle player_rect)
 {
-    for (int y = 0; y < tilemap->height; y++)
+    for (int y = 0; y < tile_map->height; y++)
     {
-        for (int x = 0; x < tilemap->width; x++)
+        for (int x = 0; x < tile_map->width; x++)
         {
-            const int tile_code = tilemap->tiles[y * tilemap->width + x];
+            const int tile_code = tile_map->tiles[y * tile_map->width + x];
             if (tile_code != TILE_WATER &&
                 tile_code != TILE_BORDER)
                 continue;
@@ -141,10 +141,10 @@ bool CheckCollisionWithMap(const TileMap* tilemap, const Rectangle playerRect)
                 TILE_SIZE
             };
             const Rectangle player_collision = {
-                playerRect.x + PLAYER_MARGIN,
-                playerRect.y + PLAYER_MARGIN,
-                playerRect.width - 2 * PLAYER_MARGIN,
-                playerRect.height - PLAYER_MARGIN
+                player_rect.x + PLAYER_MARGIN,
+                player_rect.y + PLAYER_MARGIN,
+                player_rect.width - 2 * PLAYER_MARGIN,
+                player_rect.height - PLAYER_MARGIN
             };
 
             if (CheckCollisionRecs(player_collision, tile_rect))
@@ -155,43 +155,43 @@ bool CheckCollisionWithMap(const TileMap* tilemap, const Rectangle playerRect)
 }
 
 //very basic editor
-void UpdateEditor(const TileMap* map, const Camera2D camera)
+void UpdateEditor(const TileMap* tile_map, const Camera2D camera)
 {
     const Vector2 mouse_world_pos = GetScreenToWorld2D(GetMousePosition(), camera);
 
     const int tile_x = (int)floorf(mouse_world_pos.x / TILE_SIZE);
     const int tile_y = (int)floor(mouse_world_pos.y / TILE_SIZE);
 
-    if (tile_x >= 0 && tile_x < map->width && tile_y >= 0 && tile_y < map->height)
+    if (tile_x >= 0 && tile_x < tile_map->width && tile_y >= 0 && tile_y < tile_map->height)
     {
         if (IsKeyDown(KEY_LEFT_SHIFT))
         {
             if (IsMouseButtonDown(MOUSE_BUTTON_LEFT))
             {
-                map->tiles[tile_y * map->width + tile_x] = TILE_WATER;
+                tile_map->tiles[tile_y * tile_map->width + tile_x] = TILE_WATER;
             }
             else if (IsMouseButtonDown(MOUSE_BUTTON_RIGHT))
             {
-                map->tiles[tile_y * map->width + tile_x] = TILE_SAND;
+                tile_map->tiles[tile_y * tile_map->width + tile_x] = TILE_SAND;
             }
             else if (IsMouseButtonDown(MOUSE_BUTTON_MIDDLE))
             {
-                map->tiles[tile_y * map->width + tile_x] = TILE_VOID;
+                tile_map->tiles[tile_y * tile_map->width + tile_x] = TILE_VOID;
             }
         }
         else
         {
             if (IsMouseButtonDown(MOUSE_BUTTON_LEFT))
             {
-                map->tiles[tile_y * map->width + tile_x] = TILE_DIRT;
+                tile_map->tiles[tile_y * tile_map->width + tile_x] = TILE_DIRT;
             }
             else if (IsMouseButtonDown(MOUSE_BUTTON_RIGHT))
             {
-                map->tiles[tile_y * map->width + tile_x] = TILE_GRASS;
+                tile_map->tiles[tile_y * tile_map->width + tile_x] = TILE_GRASS;
             }
             else if (IsMouseButtonDown(MOUSE_BUTTON_MIDDLE))
             {
-                map->tiles[tile_y * map->width + tile_x] = TILE_BORDER;
+                tile_map->tiles[tile_y * tile_map->width + tile_x] = TILE_BORDER;
             }
         }
     }
@@ -199,8 +199,6 @@ void UpdateEditor(const TileMap* map, const Camera2D camera)
 
 void LoadTileMap(TileMap* tile_map, const char* file)
 {
-
-
     const mode_t mode = S_IRUSR | S_IWUSR | S_IRGRP | S_IROTH;
     const int fd = open(file, O_RDONLY, mode);
     if (fd < 0)
@@ -210,7 +208,8 @@ void LoadTileMap(TileMap* tile_map, const char* file)
     }
 
     //Read map size
-    if (read(fd, &tile_map->width, sizeof(int)) != sizeof(int) || read(fd, &tile_map->height, sizeof(int)) != sizeof(int))
+    if (read(fd, &tile_map->width, sizeof(int)) != sizeof(int) || read(fd, &tile_map->height, sizeof(int)) != sizeof(
+        int))
     {
         printf("Error reading map size: %s\n", strerror(errno));
     }

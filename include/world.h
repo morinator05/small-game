@@ -20,7 +20,7 @@ typedef struct
 typedef struct World
 {
     int id;
-    TileMap map;
+    TileMap tile_map;
 
     Enemy enemies[MAX_ENEMIES];
     int enemy_count;
@@ -29,7 +29,7 @@ typedef struct World
     int trigger_count;
 } World;
 
-void CreateWorld(World* world, int id, TileMap map);
+void CreateWorld(World* world, int id, TileMap tile_map);
 bool AddEnemyToWorld(World* world, Enemy enemy);
 bool AddTriggerToWorld(World* world, Rectangle bounds, int target_world_id, Vector2 target_spawn);
 

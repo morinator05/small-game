@@ -3,6 +3,8 @@
 #include <raymath.h>
 #include "../include/player.h"
 
+#include "../include/assets.h"
+
 void CreateRedSlime(Enemy* enemy)
 {
     const auto enemy_anim = (Animation){

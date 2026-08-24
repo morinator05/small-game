@@ -1,18 +1,18 @@
 #include "../include/animation.h"
 
-void UpdateAnimation(Animation* animation)
+void UpdateAnimation(Animation* anim)
 {
     const float delta = GetFrameTime();
-    animation->time_left -= delta;
+    anim->time_left -= delta;
 
-    if (animation->time_left <= 0.0f)
+    if (anim->time_left <= 0.0f)
     {
-        animation->current += 1;
-        animation->time_left = animation->speed;
+        anim->current += 1;
+        anim->time_left = anim->speed;
 
-        if (animation->current > animation->last)
+        if (anim->current > anim->last)
         {
-            animation->current = animation->first;
+            anim->current = anim->first;
         }
     }
 }

@@ -34,12 +34,12 @@ int main()
     player.position = (Vector2){ 4.f * TILE_SIZE, 3.f * TILE_SIZE };
     AcquireWeapon(&player, SWORD);
 
-    TileMap level;
-    CreateEmptyLevel(&level);
-    LoadTileMap(&level, "asset/maps/default_map.map");
+    TileMap tile_map;
+    CreateEmptyLevel(&tile_map);
+    LoadTileMap(&tile_map, "asset/maps/default_map.map");
 
     World world;
-    CreateWorld(&world, 0, level);
+    CreateWorld(&world, 0, tile_map);
 
     Enemy enemy;
     CreateRedSlime(&enemy);
@@ -65,21 +65,21 @@ int main()
 
         if (IsKeyPressed(KEY_J))
         {
-            SaveTileMap(&world.map, "asset/maps/default_map.map");
+            SaveTileMap(&world.tile_map, "asset/maps/default_map.map");
         } else if (IsKeyPressed(KEY_K))
         {
-            LoadTileMap(&world.map, "asset/maps/default_map.map");
+            LoadTileMap(&world.tile_map, "asset/maps/default_map.map");
         }
 
         if (!IsSoundPlaying(assets.ambient_forrest)) PlaySound(assets.ambient_forrest);
 
         camera.target = Vector2Add(player.position, (Vector2){(float)TILE_SIZE / 2, 0});
-        MovePlayer(&player, &world.map);
+        MovePlayer(&player, &world.tile_map);
         UpdateWorld(&world, &player);
         UpdatePlayer(&player, &world);
 
         if (IsKeyPressed(KEY_F1)) editor_mode = !editor_mode;
-        if (editor_mode) UpdateEditor(&world.map, camera);
+        if (editor_mode) UpdateEditor(&world.tile_map, camera);
 
 
         BeginDrawing();
@@ -87,7 +87,7 @@ int main()
 
         BeginMode2D(camera);
         DrawWorld(&world);
-        if (editor_mode) DrawTileMapDebugGrid(&world.map);
+        if (editor_mode) DrawTileMapDebugGrid(&world.tile_map);
         DrawPlayer(&player);
         EndMode2D();
 
@@ -115,8 +115,8 @@ int main()
         EndDrawing();
     }
 
-    SaveTileMap(&world.map, "save.map");
-    DestroyTileMap(&world.map);
+    SaveTileMap(&world.tile_map, "save.map");
+    DestroyTileMap(&world.tile_map);
     UnloadAssets();
     CloseWindow();
 }
