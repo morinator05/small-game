@@ -4,12 +4,13 @@ This is just a small game I made using [Raylib](https://www.raylib.com/index.htm
 ![Alt text](/img/Screenshot_20260822_223813.png?raw=true "current state")
 
 ### Currently working:
-- Tilemap rendering
+- Tile-map rendering with auto-tiling 
 - Collision detection with the map
 - Basic animations
 - Very basic enemy AI
 - Basic combat using a sword :)
-- A few sound effects 
+- A few sound effects
+- Saving the state of the tiles to a file and loading from that file
 
 ### Planned:
 - Different weapons
