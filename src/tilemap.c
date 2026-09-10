@@ -57,10 +57,10 @@ static void DrawTileLayer(const TileMap* tilemap, const TileCodes tile_type_to_d
                 (float)TILE_SIZE
             };
             const Rectangle dest_rec = {
-                (float)x * TILE_SIZE,
-                (float)y * TILE_SIZE,
-                (float)TILE_SIZE,
-                (float)TILE_SIZE
+                (int)x * TILE_SIZE,
+                (int)y * TILE_SIZE,
+                TILE_SIZE,
+                TILE_SIZE
             };
 
             //Set the origin for the rotation to the center of the tile

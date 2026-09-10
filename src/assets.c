@@ -20,6 +20,12 @@ void LoadAssets()
 
     assets.sfx_sword = LoadSound("asset/sounds/sfx/sword.mp3");
     assets.sfx_hit = LoadSound("asset/sounds/sfx/hit.mp3");
+
+    SetTextureFilter(assets.tileset_gras, TEXTURE_FILTER_POINT);
+    SetTextureFilter(assets.tileset_dirt, TEXTURE_FILTER_POINT);
+    SetTextureFilter(assets.tileset_water, TEXTURE_FILTER_POINT);
+    SetTextureFilter(assets.tileset_sand, TEXTURE_FILTER_POINT);
+    SetTextureFilter(assets.tileset_border, TEXTURE_FILTER_POINT);
 }
 
 void UnloadAssets()
