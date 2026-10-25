@@ -109,9 +109,21 @@ static void UpdateTitleState(Game* game)
 
 static void UpdatePlayingState(Game* game)
 {
-    if (IsKeyPressed(KEY_ESCAPE)) ChangeState(game, GAME_STATE_MENU);
-    if (IsKeyPressed(KEY_P)) ChangeState(game, GAME_STATE_PAUSED);
-    if (IsKeyPressed(KEY_F1)) ChangeState(game, GAME_STATE_EDITOR);
+    if (IsKeyPressed(KEY_ESCAPE))
+    {
+        ChangeState(game, GAME_STATE_MENU);
+        return;
+    }
+    if (IsKeyPressed(KEY_P))
+    {
+        ChangeState(game, GAME_STATE_PAUSED);
+        return;
+    }
+    if (IsKeyPressed(KEY_F1))
+    {
+        ChangeState(game, GAME_STATE_EDITOR);
+        return;
+    }
 
     World* world = GetCurrentWorld(game);
     MovePlayer(&game->player, &world->tile_map);
@@ -162,15 +174,6 @@ static void UpdateMenuState(Game* game)
 
 void UpdateGame(Game* game)
 {
-    //Snap the camera to whole screen pixels, otherwise tile edges land between pixels and seams flicker
-    const Vector2 target = Vector2Add(game->player.position, (Vector2){(float)TILE_SIZE / 2, 0});
-    game->camera.target = (Vector2){
-        floorf(target.x * game->camera.zoom) / game->camera.zoom,
-        floorf(target.y * game->camera.zoom) / game->camera.zoom,
-    };
-    //Draw the player at the snapped camera position so both move in the same pixel steps
-    game->player.draw_position = Vector2Subtract(game->camera.target, (Vector2){(float)TILE_SIZE / 2, 0});
-
     switch (game->state)
     {
     case GAME_STATE_TITLE: UpdateTitleState(game);
@@ -184,6 +187,16 @@ void UpdateGame(Game* game)
     case GAME_STATE_MENU: UpdateMenuState(game);
         break;
     }
+
+    //Snap after the state update so the player is drawn where it moved to this frame
+    //Snap the camera to whole screen pixels, otherwise tile edges land between pixels and seams flicker
+    const Vector2 target = Vector2Add(game->player.position, (Vector2){(float)TILE_SIZE / 2, 0});
+    game->camera.target = (Vector2){
+        floorf(target.x * game->camera.zoom) / game->camera.zoom,
+        floorf(target.y * game->camera.zoom) / game->camera.zoom,
+    };
+    //Draw the player at the snapped camera position so both move in the same pixel steps
+    game->player.draw_position = Vector2Subtract(game->camera.target, (Vector2){(float)TILE_SIZE / 2, 0});
 }
 
 void DrawGame(Game* game)
@@ -215,15 +228,15 @@ void DrawGame(Game* game)
         DrawTitleScreen();
         DrawMenu(&TITLE_MENU, game->menu_selection);
         break;
-    case GAME_STATE_PLAYING: DrawHud(&game->player, world);
+    case GAME_STATE_PLAYING: DrawHud(&game->player);
         break;
     case GAME_STATE_EDITOR: DrawEditorUi(&world->tile_map, game->camera);
         break;
     case GAME_STATE_PAUSED:
-        DrawHud(&game->player, world);
+        DrawHud(&game->player);
         DrawPauseScreen();
         break;
-    case GAME_STATE_MENU: DrawGameMenu(&GAME_MENU, game->menu_selection, &game->player);
+    case GAME_STATE_MENU: DrawGameMenu(&GAME_MENU, game->menu_selection);
         break;
     }
     EndUiMode();

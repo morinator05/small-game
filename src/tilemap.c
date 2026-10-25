@@ -215,6 +215,7 @@ void LoadTileMap(TileMap* tile_map, const char* file)
     }
 
     size_t bytes_to_read = GetTilesDataSize(tile_map);
+    free(tile_map->tiles);
     tile_map->tiles = calloc(1, bytes_to_read);
     size_t bytes_read = read(fd, tile_map->tiles, bytes_to_read);
     if (bytes_read != bytes_to_read)

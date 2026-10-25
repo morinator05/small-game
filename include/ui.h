@@ -22,9 +22,9 @@ void EndUiMode(void);
 
 void DrawMenu(const Menu* menu, int selected);
 void DrawTitleScreen(void);
-void DrawHud(const Player* player, const World* world);
+void DrawHud(const Player* player);
 void DrawPauseScreen(void);
-void DrawGameMenu(const Menu* menu, int selected, const Player* player);
+void DrawGameMenu(const Menu* menu, int selected);
 void DrawEditorUi(const TileMap* tile_map, Camera2D camera);
 
 //World space, call between BeginMode2D and EndMode2D

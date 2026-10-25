@@ -37,7 +37,6 @@
 
 #define SCREEN_MARGIN 6
 #define PANEL_GAP 2
-#define WINDOW_SPACING 6
 #define WINDOW_PADDING 10
 #define WINDOW_HEADER_HEIGHT (FONT_LARGE + 6)
 #define ROW_HEIGHT 12
@@ -47,8 +46,6 @@
 #define MENU_BUTTON_SPACING 4
 #define MENU_BUTTON_TEXT_Y 4
 #define MENU_ARROW_X 4
-
-#define STATS_WINDOW_WIDTH 120
 
 #define HUD_PANEL_HEIGHT 30
 #define HUD_PADDING 6
@@ -434,22 +431,12 @@ static void DrawHealthPanel(const Rectangle rect, const Player* player)
                       ALIGN_CENTER, UI_TEXT_LIGHT);
 }
 
-static const char* WeaponName(const WeaponTypes type)
-{
-    switch (type)
-    {
-    case SWORD: return "Sword";
-    case BOW: return "Bow";
-    default: return "Fists";
-    }
-}
-
+//Square slot showing the equipped weapon, hidden when unarmed
 static void DrawWeaponPanel(const Rectangle rect, const Weapon* weapon)
 {
     const Rectangle content = DrawHudPanel(rect);
-    const Rectangle slot = {content.x, content.y, HUD_SLOT_SIZE, HUD_SLOT_SIZE};
-    const Rectangle icon = Inset(slot, 1, 1);
-    DrawNotchedRect(slot, UI_WOOD_DARK);
+    const Rectangle icon = Inset(content, 1, 1);
+    DrawNotchedRect(content, UI_WOOD_DARK);
     DrawRectangleRec(icon, UI_PAPER_DARK);
 
     if (weapon->type == SWORD)
@@ -464,42 +451,19 @@ static void DrawWeaponPanel(const Rectangle rect, const Weapon* weapon)
         const float shade = floorf(icon.height * weapon->cooldown / weapon->hit_rate);
         DrawRectangleRec((Rectangle){icon.x, icon.y + icon.height - shade, icon.width, shade}, UI_SHADOW);
     }
-
-    const float text_x = content.x + HUD_TEXT_X;
-    DrawLabel(WeaponName(weapon->type), text_x, content.y + 1, FONT_SMALL, ALIGN_LEFT, UI_TEXT);
-    DrawLabel(TextFormat("DMG %d", weapon->damage), text_x, content.y + 11, FONT_SMALL, ALIGN_LEFT, UI_ACCENT);
 }
 
-static void DrawEnemyCounterPanel(const Rectangle rect, const World* world)
-{
-    int alive = 0;
-    for (int i = 0; i < world->enemy_count; i++)
-    {
-        if (world->enemies[i].alive) alive++;
-    }
-
-    const Rectangle content = DrawHudPanel(rect);
-    //The slime only fills the lower middle of its frame, so crop to it
-    DrawTexturePro(assets.spritesheet_red_slime, (Rectangle){4, 8, 8, 8},
-                   (Rectangle){content.x + 1, content.y + 1, 16, 16}, Vector2Zero(), 0, WHITE);
-
-    const float text_y = content.y + (HUD_SLOT_SIZE - FONT_SMALL) / 2 + 1;
-    if (alive > 0) DrawLabel(TextFormat("x %d", alive), content.x + HUD_TEXT_X, text_y, FONT_SMALL, ALIGN_LEFT, UI_TEXT);
-    else DrawLabel("Clear!", content.x + HUD_TEXT_X, text_y, FONT_SMALL, ALIGN_LEFT, UI_HP);
-}
-
-void DrawHud(const Player* player, const World* world)
+void DrawHud(const Player* player)
 {
     const Rectangle health = {SCREEN_MARGIN, SCREEN_MARGIN, 110, HUD_PANEL_HEIGHT};
-    const Rectangle weapon = {SCREEN_MARGIN, health.y + health.height + PANEL_GAP, 80, HUD_PANEL_HEIGHT};
     DrawHealthPanel(health, player);
-    DrawWeaponPanel(weapon, &player->weapon);
 
-    if (world->enemy_count > 0)
+    if (player->weapon.type != UNARMED)
     {
-        const float width = 70;
-        const Rectangle enemies = {UiScreenSize().x - SCREEN_MARGIN - width, SCREEN_MARGIN, width, HUD_PANEL_HEIGHT};
-        DrawEnemyCounterPanel(enemies, world);
+        const Rectangle weapon = {
+            health.x + health.width + PANEL_GAP, SCREEN_MARGIN, HUD_PANEL_HEIGHT, HUD_PANEL_HEIGHT
+        };
+        DrawWeaponPanel(weapon, &player->weapon);
     }
 }
 
@@ -517,30 +481,10 @@ void DrawPauseScreen(void)
     DrawLabel(hint, content.x + content.width / 2, content.y, FONT_SMALL, ALIGN_CENTER, UI_WOOD_DARK);
 }
 
-void DrawGameMenu(const Menu* menu, const int selected, const Player* player)
+void DrawGameMenu(const Menu* menu, const int selected)
 {
     DrawDimOverlay();
     DrawMenu(menu, selected);
-
-    //Stats window next to the menu
-    const int row_count = 5;
-    const Rectangle menu_bounds = MenuBounds(menu);
-    const Rectangle window = {
-        menu_bounds.x + menu_bounds.width + WINDOW_SPACING,
-        menu_bounds.y,
-        STATS_WINDOW_WIDTH,
-        fmaxf(menu_bounds.height, WindowHeight(true, (float)(row_count * ROW_HEIGHT)))
-    };
-    const Rectangle content = DrawWindow(window, "Stats");
-
-    //TextFormat has a small ring of buffers, so use each result right away
-    const Weapon* weapon = &player->weapon;
-    const int hp = player->hp < 0 ? 0 : player->hp;
-    DrawPropertyRow(content, 0, "Health", UI_WOOD_DARK, TextFormat("%d/%d", hp, PLAYER_DEFAULT_HP));
-    DrawPropertyRow(content, 1, "Weapon", UI_WOOD_DARK, WeaponName(weapon->type));
-    DrawPropertyRow(content, 2, "Damage", UI_WOOD_DARK, TextFormat("%d", weapon->damage));
-    DrawPropertyRow(content, 3, "Reach", UI_WOOD_DARK, TextFormat("%d", (int)weapon->reach));
-    DrawPropertyRow(content, 4, "Cooldown", UI_WOOD_DARK, TextFormat("%.1fs", weapon->hit_rate));
 }
 
 static bool GetMouseTile(const TileMap* tile_map, const Camera2D camera, int* tile_x, int* tile_y)
