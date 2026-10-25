@@ -25,10 +25,9 @@ void CreateGame(Game* game)
     game->player.position = (Vector2){3 * TILE_SIZE, 3 * TILE_SIZE};
     AcquireWeapon(&game->player, SWORD);
 
-    Enemy enemy;
-    CreateRedSlime(&enemy);
-    enemy.position = (Vector2){.x = 100, .y = 100};
-    AddEnemyToWorld(&game->worlds[0], enemy);
+    //TODO: testing only, remove once levels place their own enemies
+    SpawnRandomEnemies(&game->worlds[0], RED_SLIME, 10);
+    SpawnRandomEnemies(&game->worlds[0], WIZ, 5);
 
 
     Camera2D camera = {0};

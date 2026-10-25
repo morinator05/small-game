@@ -47,6 +47,7 @@ void UpdateRedSlime(Enemy* enemy, TileMap* map, Player* player);
 void CreateWiz(Enemy* enemy);
 void UpdateWiz(Enemy* enemy, TileMap* map, Player* player);
 
+void CreateEnemy(Enemy* enemy, Type type);
 void UpdateEnemy(Enemy* enemy, TileMap* map, Player* player);
 void DrawEnemy(Enemy* enemy);
 

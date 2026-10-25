@@ -35,8 +35,6 @@ void CreateRedSlime(Enemy* enemy)
 
 void UpdateRedSlime(Enemy* enemy, TileMap* map, Player* player)
 {
-    if (!enemy->alive) return;
-
     //Update Hit Cooldown
     enemy->hit_cooldown -= GetFrameTime();
     if (enemy->hit_cooldown < 0) enemy->hit_cooldown = 0;
@@ -88,9 +86,6 @@ void UpdateRedSlime(Enemy* enemy, TileMap* map, Player* player)
     {
         SetRow(&enemy->sprite.anim, ENEMY_TEXTURE_ROW_ANGRY, enemy->sprite.frames_per_line);
     }
-
-    if (enemy->hp <= 0) enemy->alive = false;
-
 }
 
 void CreateWiz(Enemy* enemy)
@@ -112,10 +107,10 @@ void CreateWiz(Enemy* enemy)
     };
 
     *enemy = (Enemy){
-        .type = RED_SLIME,
+        .type = WIZ,
         .sprite = enemy_sprite,
-        .position = {300, 100},
         .alive = true,
+        .position = {300, 100},
         .hp = 100,
         .velocity = 10,
         .angry = false,
@@ -129,11 +124,25 @@ void CreateWiz(Enemy* enemy)
 
 void UpdateWiz(Enemy* enemy, TileMap* map, Player* player)
 {
-    if (!enemy->alive) return;
+}
+
+void CreateEnemy(Enemy* enemy, const Type type)
+{
+    switch (type)
+    {
+    case RED_SLIME: CreateRedSlime(enemy);
+        break;
+    case WIZ: CreateWiz(enemy);
+        break;
+    }
 }
 
 void UpdateEnemy(Enemy* enemy, TileMap* map, Player* player)
 {
+    //Shared by all enemy types, so a dead enemy stops acting before its own update runs
+    if (enemy->hp <= 0) enemy->alive = false;
+    if (!enemy->alive) return;
+
     switch (enemy->type)
     {
     case RED_SLIME: UpdateRedSlime(enemy, map, player);
