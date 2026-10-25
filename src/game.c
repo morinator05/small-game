@@ -9,6 +9,25 @@
 
 #include "../include/assets.h"
 #include "../include/levels.h"
+#include "../include/ui.h"
+
+static const char* const TITLE_MENU_ITEMS[] = {"Start Game", "Quit"};
+static const Menu TITLE_MENU = {
+    .title = NULL,
+    .items = TITLE_MENU_ITEMS,
+    .count = 2,
+    .center_x = .5f,
+    .center_y = .62f
+};
+
+static const char* const GAME_MENU_ITEMS[] = {"Resume", "Back to Title", "Quit Game"};
+static const Menu GAME_MENU = {
+    .title = "Menu",
+    .items = GAME_MENU_ITEMS,
+    .count = 3,
+    .center_x = .4f,
+    .center_y = .5f
+};
 
 void CreateGame(Game* game)
 {
@@ -56,11 +75,21 @@ void UpdateGame(Game* game)
     switch (game->state)
     {
     case TITLE:
-        if (IsKeyPressed(KEY_ENTER)) game->state = PLAYING;
-
+        switch (UpdateMenu(&TITLE_MENU, &game->menu_selection))
+        {
+        case 0: game->state = PLAYING;
+            break;
+        case 1: game->quit = true;
+            break;
+        default: break;
+        }
         break;
     case PLAYING:
-        if (IsKeyPressed(KEY_ESCAPE)) game->state = IN_MENU;
+        if (IsKeyPressed(KEY_ESCAPE))
+        {
+            game->state = IN_MENU;
+            game->menu_selection = 0;
+        }
         if (IsKeyPressed(KEY_P)) game->state = PAUSED;
         if (IsKeyPressed(KEY_F1)) game->state = LEVEL_EDITOR;
 
@@ -88,46 +117,76 @@ void UpdateGame(Game* game)
         if (IsKeyPressed(KEY_P)) game->state = PLAYING;
         break;
     case IN_MENU:
-        if (IsKeyPressed(KEY_ESCAPE)) game->state = PLAYING;
+        if (IsKeyPressed(KEY_ESCAPE))
+        {
+            game->state = PLAYING;
+            break;
+        }
+
+        switch (UpdateMenu(&GAME_MENU, &game->menu_selection))
+        {
+        case 0: game->state = PLAYING;
+            break;
+        case 1: //Start over with a fresh game
+            DestroyGame(game);
+            CreateGame(game);
+            break;
+        case 2: game->quit = true;
+            break;
+        default: break;
+        }
         break;
     }
 }
 
 void DrawGame(Game* game)
 {
+    World* world = &game->worlds[game->current_world_idx];
+
     BeginMode2D(game->camera);
     ClearBackground(DARKBLUE);
     switch (game->state)
     {
     case TITLE:
+        DrawWorld(world);
+        DrawPlayer(&game->player);
         EndMode2D();
 
-        DrawText("TITLE!", GetScreenWidth() / 2, GetScreenHeight() / 2, 50, RAYWHITE);
+        DrawTitleScreen();
+        DrawMenu(&TITLE_MENU, game->menu_selection);
         break;
     case PLAYING:
-        DrawWorld(&game->worlds[game->current_world_idx]);
+        DrawWorld(world);
         DrawPlayer(&game->player);
+        DrawEnemyHealthBars(world);
         EndMode2D();
+
+        DrawHud(&game->player, world);
         break;
     case LEVEL_EDITOR:
-        DrawWorld(&game->worlds[game->current_world_idx]);
-        DrawTileMapDebugGrid(&game->worlds[game->current_world_idx].tile_map);
+        DrawWorld(world);
+        DrawTileMapDebugGrid(&world->tile_map);
         DrawPlayer(&game->player);
+        DrawEditorCursor(&world->tile_map, game->camera);
         EndMode2D();
+
+        DrawEditorUi(&world->tile_map, game->camera);
         break;
     case PAUSED:
-        DrawWorld(&game->worlds[game->current_world_idx]);
+        DrawWorld(world);
         DrawPlayer(&game->player);
+        DrawEnemyHealthBars(world);
         EndMode2D();
 
-        DrawText("Paused!", GetScreenWidth() / 2, GetScreenHeight() / 2, 50, RAYWHITE);
+        DrawHud(&game->player, world);
+        DrawPauseScreen();
         break;
     case IN_MENU:
-        DrawWorld(&game->worlds[game->current_world_idx]);
+        DrawWorld(world);
         DrawPlayer(&game->player);
         EndMode2D();
 
-        DrawText("Draw menue here", GetScreenWidth() / 2, GetScreenHeight() / 2, 50, RAYWHITE);
+        DrawGameMenu(&GAME_MENU, game->menu_selection, &game->player);
         break;
     }
 }

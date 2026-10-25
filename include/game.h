@@ -21,6 +21,8 @@ typedef struct
     World worlds[MAX_WORLDS];
     Player player;
     Camera2D camera;
+    int menu_selection;
+    bool quit;
 } Game;
 
 void CreateGame(Game* game);

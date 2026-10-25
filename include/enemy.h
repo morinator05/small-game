@@ -32,6 +32,7 @@ typedef struct Enemy
     Vector2 position;
     bool alive;
     int hp;
+    int max_hp;
     float velocity;
     bool angry;
     float trigger_radius;

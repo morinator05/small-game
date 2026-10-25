@@ -31,7 +31,7 @@ int main()
     Game game;
     CreateGame(&game);
 
-    while (!WindowShouldClose())
+    while (!WindowShouldClose() && !game.quit)
     {
         if (!IsSoundPlaying(assets.ambient_forrest)) PlaySound(assets.ambient_forrest);
         UpdateGame(&game);
