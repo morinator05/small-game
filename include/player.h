@@ -38,6 +38,7 @@ typedef struct Player
 {
     Sprite sprite;
     Vector2 position;
+    Vector2 draw_position; //position snapped to the camera's pixel grid, used for drawing
     float velocity;
     int hp;
     bool is_attacking;

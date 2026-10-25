@@ -9,16 +9,18 @@ typedef struct
 {
     const char* title; //can be NULL
     const char* const* items;
-    int count;
-    float center_x; //relative to the screen, 0.5 is centered
-    float center_y;
+    int item_count;
 } Menu;
 
 //Returns the index of the activated item or -1
 int UpdateMenu(const Menu* menu, int* selected);
-void DrawMenu(const Menu* menu, int selected);
 
-//Screen space
+//UI space: the UI is laid out in a virtual 480p resolution and scaled up by whole numbers.
+//Call the screen draw functions between BeginUiMode and EndUiMode.
+void BeginUiMode(void);
+void EndUiMode(void);
+
+void DrawMenu(const Menu* menu, int selected);
 void DrawTitleScreen(void);
 void DrawHud(const Player* player, const World* world);
 void DrawPauseScreen(void);

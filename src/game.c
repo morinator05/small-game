@@ -1,41 +1,61 @@
 #include "../include/game.h"
 
 #include <raymath.h>
-
-#include "../include/player.h"
-
 #include <stdlib.h>
 #include <string.h>
 
 #include "../include/assets.h"
 #include "../include/levels.h"
+#include "../include/player.h"
 #include "../include/ui.h"
 
-static const char* const TITLE_MENU_ITEMS[] = {"Start Game", "Quit"};
+#define DEFAULT_MAP_PATH "asset/maps/default_map.map"
+
+typedef enum
+{
+    TITLE_MENU_START,
+    TITLE_MENU_QUIT,
+    TITLE_MENU_COUNT,
+} TitleMenuItem;
+
+static const char* const TITLE_MENU_ITEMS[TITLE_MENU_COUNT] = {
+    [TITLE_MENU_START] = "Start Game",
+    [TITLE_MENU_QUIT] = "Quit",
+};
+
 static const Menu TITLE_MENU = {
     .title = NULL,
     .items = TITLE_MENU_ITEMS,
-    .count = 2,
-    .center_x = .5f,
-    .center_y = .62f
+    .item_count = TITLE_MENU_COUNT,
 };
 
-static const char* const GAME_MENU_ITEMS[] = {"Resume", "Back to Title", "Quit Game"};
+typedef enum
+{
+    GAME_MENU_RESUME,
+    GAME_MENU_TITLE,
+    GAME_MENU_QUIT,
+    GAME_MENU_COUNT,
+} GameMenuItem;
+
+static const char* const GAME_MENU_ITEMS[GAME_MENU_COUNT] = {
+    [GAME_MENU_RESUME] = "Resume",
+    [GAME_MENU_TITLE] = "Back to Title",
+    [GAME_MENU_QUIT] = "Quit Game",
+};
+
 static const Menu GAME_MENU = {
     .title = "Menu",
     .items = GAME_MENU_ITEMS,
-    .count = 3,
-    .center_x = .4f,
-    .center_y = .5f
+    .item_count = GAME_MENU_COUNT,
 };
 
 void CreateGame(Game* game)
 {
     memset(game, 0, sizeof(*game));
-    game->state = TITLE;
+    game->state = GAME_STATE_TITLE;
 
     TileMap default_tile_map = {0};
-    LoadTileMap(&default_tile_map, "asset/maps/default_map.map");
+    LoadTileMap(&default_tile_map, DEFAULT_MAP_PATH);
     if (default_tile_map.tiles == NULL) CreateEmptyLevel(&default_tile_map);
     CreateWorld(&game->worlds[0], 0, default_tile_map);
     game->current_world_idx = 0;
@@ -48,16 +68,12 @@ void CreateGame(Game* game)
     SpawnRandomEnemies(&game->worlds[0], RED_SLIME, 10);
     SpawnRandomEnemies(&game->worlds[0], WIZ, 5);
 
-
-    Camera2D camera = {0};
-    camera.target = game->player.position;
-    camera.rotation = 0.0f;
-    camera.zoom = 6.0f;
-    camera.offset = (Vector2){
-        GetScreenWidth() / 2.0f,
-        GetScreenHeight() / 2.0f
+    game->camera = (Camera2D){
+        .offset = {floorf(GetScreenWidth() / 2.0f), floorf(GetScreenHeight() / 2.0f)},
+        .target = game->player.position,
+        .rotation = 0.0f,
+        .zoom = 6.0f,
     };
-    game->camera = camera;
 }
 
 void DestroyGame(Game* game)
@@ -68,125 +84,147 @@ void DestroyGame(Game* game)
     }
 }
 
+static World* GetCurrentWorld(Game* game)
+{
+    return &game->worlds[game->current_world_idx];
+}
+
+static void ChangeState(Game* game, const GameState state)
+{
+    game->state = state;
+    game->menu_selection = 0;
+}
+
+static void UpdateTitleState(Game* game)
+{
+    switch (UpdateMenu(&TITLE_MENU, &game->menu_selection))
+    {
+    case TITLE_MENU_START: ChangeState(game, GAME_STATE_PLAYING);
+        break;
+    case TITLE_MENU_QUIT: game->quit = true;
+        break;
+    default: break;
+    }
+}
+
+static void UpdatePlayingState(Game* game)
+{
+    if (IsKeyPressed(KEY_ESCAPE)) ChangeState(game, GAME_STATE_MENU);
+    if (IsKeyPressed(KEY_P)) ChangeState(game, GAME_STATE_PAUSED);
+    if (IsKeyPressed(KEY_F1)) ChangeState(game, GAME_STATE_EDITOR);
+
+    World* world = GetCurrentWorld(game);
+    MovePlayer(&game->player, &world->tile_map);
+    UpdatePlayer(&game->player, world);
+    UpdateWorld(world, &game->player);
+}
+
+static void UpdateEditorState(Game* game)
+{
+    if (IsKeyPressed(KEY_F1)) ChangeState(game, GAME_STATE_PLAYING);
+
+    World* world = GetCurrentWorld(game);
+    MovePlayer(&game->player, &world->tile_map);
+    UpdateEditor(&world->tile_map, game->camera);
+
+    if (IsKeyPressed(KEY_J)) SaveTileMap(&world->tile_map, DEFAULT_MAP_PATH);
+    else if (IsKeyPressed(KEY_K)) LoadTileMap(&world->tile_map, DEFAULT_MAP_PATH);
+
+    UpdatePlayer(&game->player, world);
+}
+
+static void UpdatePausedState(Game* game)
+{
+    if (IsKeyPressed(KEY_P)) ChangeState(game, GAME_STATE_PLAYING);
+}
+
+static void UpdateMenuState(Game* game)
+{
+    if (IsKeyPressed(KEY_ESCAPE))
+    {
+        ChangeState(game, GAME_STATE_PLAYING);
+        return;
+    }
+
+    switch (UpdateMenu(&GAME_MENU, &game->menu_selection))
+    {
+    case GAME_MENU_RESUME: ChangeState(game, GAME_STATE_PLAYING);
+        break;
+    case GAME_MENU_TITLE: //Start over with a fresh game
+        DestroyGame(game);
+        CreateGame(game);
+        break;
+    case GAME_MENU_QUIT: game->quit = true;
+        break;
+    default: break;
+    }
+}
+
 void UpdateGame(Game* game)
 {
-    game->camera.target = Vector2Add(game->player.position, (Vector2){(float)TILE_SIZE / 2, 0});
+    //Snap the camera to whole screen pixels, otherwise tile edges land between pixels and seams flicker
+    const Vector2 target = Vector2Add(game->player.position, (Vector2){(float)TILE_SIZE / 2, 0});
+    game->camera.target = (Vector2){
+        floorf(target.x * game->camera.zoom) / game->camera.zoom,
+        floorf(target.y * game->camera.zoom) / game->camera.zoom,
+    };
+    //Draw the player at the snapped camera position so both move in the same pixel steps
+    game->player.draw_position = Vector2Subtract(game->camera.target, (Vector2){(float)TILE_SIZE / 2, 0});
 
     switch (game->state)
     {
-    case TITLE:
-        switch (UpdateMenu(&TITLE_MENU, &game->menu_selection))
-        {
-        case 0: game->state = PLAYING;
-            break;
-        case 1: game->quit = true;
-            break;
-        default: break;
-        }
+    case GAME_STATE_TITLE: UpdateTitleState(game);
         break;
-    case PLAYING:
-        if (IsKeyPressed(KEY_ESCAPE))
-        {
-            game->state = IN_MENU;
-            game->menu_selection = 0;
-        }
-        if (IsKeyPressed(KEY_P)) game->state = PAUSED;
-        if (IsKeyPressed(KEY_F1)) game->state = LEVEL_EDITOR;
-
-        MovePlayer(&game->player, &game->worlds[game->current_world_idx].tile_map);
-        UpdatePlayer(&game->player, &game->worlds[game->current_world_idx]);
-        UpdateWorld(&game->worlds[game->current_world_idx], &game->player);
+    case GAME_STATE_PLAYING: UpdatePlayingState(game);
         break;
-    case LEVEL_EDITOR:
-        if (IsKeyPressed(KEY_F1)) game->state = PLAYING;
-
-        MovePlayer(&game->player, &game->worlds[game->current_world_idx].tile_map);
-        UpdateEditor(&game->worlds[game->current_world_idx].tile_map, game->camera);
-
-        if (IsKeyPressed(KEY_J))
-        {
-            SaveTileMap(&game->worlds[game->current_world_idx].tile_map, "asset/maps/default_map.map");
-        }
-        else if (IsKeyPressed(KEY_K))
-        {
-            LoadTileMap(&game->worlds[game->current_world_idx].tile_map, "asset/maps/default_map.map");
-        }
-        UpdatePlayer(&game->player, &game->worlds[game->current_world_idx]);
+    case GAME_STATE_EDITOR: UpdateEditorState(game);
         break;
-    case PAUSED:
-        if (IsKeyPressed(KEY_P)) game->state = PLAYING;
+    case GAME_STATE_PAUSED: UpdatePausedState(game);
         break;
-    case IN_MENU:
-        if (IsKeyPressed(KEY_ESCAPE))
-        {
-            game->state = PLAYING;
-            break;
-        }
-
-        switch (UpdateMenu(&GAME_MENU, &game->menu_selection))
-        {
-        case 0: game->state = PLAYING;
-            break;
-        case 1: //Start over with a fresh game
-            DestroyGame(game);
-            CreateGame(game);
-            break;
-        case 2: game->quit = true;
-            break;
-        default: break;
-        }
+    case GAME_STATE_MENU: UpdateMenuState(game);
         break;
     }
 }
 
 void DrawGame(Game* game)
 {
-    World* world = &game->worlds[game->current_world_idx];
+    World* world = GetCurrentWorld(game);
+
+    ClearBackground(DARKBLUE);
 
     BeginMode2D(game->camera);
-    ClearBackground(DARKBLUE);
+    DrawWorld(world);
+    if (game->state == GAME_STATE_EDITOR) DrawTileMapDebugGrid(&world->tile_map);
+    DrawPlayer(&game->player);
+
     switch (game->state)
     {
-    case TITLE:
-        DrawWorld(world);
-        DrawPlayer(&game->player);
-        EndMode2D();
+    case GAME_STATE_PLAYING:
+    case GAME_STATE_PAUSED: DrawEnemyHealthBars(world);
+        break;
+    case GAME_STATE_EDITOR: DrawEditorCursor(&world->tile_map, game->camera);
+        break;
+    default: break;
+    }
+    EndMode2D();
 
+    BeginUiMode();
+    switch (game->state)
+    {
+    case GAME_STATE_TITLE:
         DrawTitleScreen();
         DrawMenu(&TITLE_MENU, game->menu_selection);
         break;
-    case PLAYING:
-        DrawWorld(world);
-        DrawPlayer(&game->player);
-        DrawEnemyHealthBars(world);
-        EndMode2D();
-
-        DrawHud(&game->player, world);
+    case GAME_STATE_PLAYING: DrawHud(&game->player, world);
         break;
-    case LEVEL_EDITOR:
-        DrawWorld(world);
-        DrawTileMapDebugGrid(&world->tile_map);
-        DrawPlayer(&game->player);
-        DrawEditorCursor(&world->tile_map, game->camera);
-        EndMode2D();
-
-        DrawEditorUi(&world->tile_map, game->camera);
+    case GAME_STATE_EDITOR: DrawEditorUi(&world->tile_map, game->camera);
         break;
-    case PAUSED:
-        DrawWorld(world);
-        DrawPlayer(&game->player);
-        DrawEnemyHealthBars(world);
-        EndMode2D();
-
+    case GAME_STATE_PAUSED:
         DrawHud(&game->player, world);
         DrawPauseScreen();
         break;
-    case IN_MENU:
-        DrawWorld(world);
-        DrawPlayer(&game->player);
-        EndMode2D();
-
-        DrawGameMenu(&GAME_MENU, game->menu_selection, &game->player);
+    case GAME_STATE_MENU: DrawGameMenu(&GAME_MENU, game->menu_selection, &game->player);
         break;
     }
+    EndUiMode();
 }

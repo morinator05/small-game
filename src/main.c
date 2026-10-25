@@ -40,9 +40,6 @@ int main()
 
         DrawGame(&game);
 
-        DrawText(TextFormat("FPS: %d", GetFPS()), GetScreenWidth() / 2 - 40, 0, 28, RAYWHITE);
-        DrawText(TextFormat("%d", game.state), GetScreenWidth() / 2 - 40, 30, 28, RAYWHITE);
-
         EndDrawing();
     }
 

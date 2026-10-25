@@ -11,8 +11,8 @@ static void DrawPlayerAttack(Player* player)
     if (player->is_attacking && player->weapon.type != UNARMED)
     {
         player->attack_progress += GetFrameTime() * 10;
-        const float dest_x = player->position.x + (float)TILE_SIZE / 2;
-        const float dest_y = player->position.y + (float)TILE_SIZE / 2;
+        const float dest_x = player->draw_position.x + (float)TILE_SIZE / 2;
+        const float dest_y = player->draw_position.y + (float)TILE_SIZE / 2;
 
         float rotation = 180.f;
         switch (player->current_direction)
@@ -47,10 +47,10 @@ void DrawPlayer(Player* player)
     if (player->is_attacking && player->current_direction == UP)
     {
         DrawPlayerAttack(player);
-        DrawSprite(&player->sprite, player->position);
+        DrawSprite(&player->sprite, player->draw_position);
     } else
     {
-        DrawSprite(&player->sprite, player->position);
+        DrawSprite(&player->sprite, player->draw_position);
         DrawPlayerAttack(player);
     }
 

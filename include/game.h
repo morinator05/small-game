@@ -7,11 +7,11 @@
 
 typedef enum
 {
-    TITLE,
-    PLAYING,
-    LEVEL_EDITOR,
-    PAUSED,
-    IN_MENU,
+    GAME_STATE_TITLE,
+    GAME_STATE_PLAYING,
+    GAME_STATE_EDITOR,
+    GAME_STATE_PAUSED,
+    GAME_STATE_MENU,
 } GameState;
 
 typedef struct
