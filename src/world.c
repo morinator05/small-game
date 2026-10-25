@@ -22,6 +22,7 @@ bool AddEnemyToWorld(World* world, const Enemy enemy)
 bool AddTriggerToWorld(World* world, Rectangle bounds, int target_world_id, Vector2 target_spawn)
 {
     //TODO: implement triggers to switch worlds
+    return false;
 }
 
 void UpdateWorld(World* world, void* player)

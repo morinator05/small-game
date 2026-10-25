@@ -35,7 +35,6 @@ void CreateRedSlime(Enemy* enemy)
 
 void UpdateRedSlime(Enemy* enemy, TileMap* map, Player* player)
 {
-    UpdateAnimation(&enemy->sprite.anim);
     if (!enemy->alive) return;
 
     //Update Hit Cooldown
