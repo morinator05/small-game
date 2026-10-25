@@ -1,4 +1,5 @@
 #include <raylib.h>
+#include <stdlib.h>
 
 #include "../include/assets.h"
 #include "../include/game.h"
@@ -12,14 +13,15 @@ int main()
 {
     //Innit the Window
     SetConfigFlags(FLAG_VSYNC_HINT);
-    InitWindow(GetMonitorWidth(0), GetMonitorHeight(0), "Yet Another 2D Adventure Game");
+    InitWindow(0, 0, "Yet Another 2D Adventure Game");
     SetTargetFPS(GetMonitorRefreshRate(0));
-    SetExitKey(KEY_LEFT_ALT || KEY_F4);
+    SetExitKey(KEY_NULL); //ESC is used for the menu, closing is handled by the window manager
 
     //Innit Audio
     InitAudioDevice();
     if (!IsAudioDeviceReady())
     {
+        CloseWindow();
         return EXIT_FAILURE;
     }
     SetMasterVolume(.25f);

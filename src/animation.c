@@ -35,6 +35,11 @@ void SetRow(Animation* anim, const int row, const int frames_per_row)
 {
     anim->first = row * frames_per_row;
     anim->last = anim->first + frames_per_row - 1;
+
+    if (anim->current < anim->first || anim->current > anim->last)
+    {
+        anim->current = anim->first;
+    }
 }
 
 void Reset(Animation* anim)

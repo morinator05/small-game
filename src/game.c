@@ -5,20 +5,31 @@
 #include "../include/player.h"
 
 #include <stdlib.h>
+#include <string.h>
 
 #include "../include/assets.h"
+#include "../include/levels.h"
 
 void CreateGame(Game* game)
 {
+    memset(game, 0, sizeof(*game));
     game->state = TITLE;
 
-    TileMap default_tile_map;
+    TileMap default_tile_map = {0};
     LoadTileMap(&default_tile_map, "asset/maps/default_map.map");
+    if (default_tile_map.tiles == NULL) CreateEmptyLevel(&default_tile_map);
     CreateWorld(&game->worlds[0], 0, default_tile_map);
     game->current_world_idx = 0;
 
     CreatePlayer(&game->player);
     game->player.position = (Vector2){3 * TILE_SIZE, 3 * TILE_SIZE};
+    AcquireWeapon(&game->player, SWORD);
+
+    Enemy enemy;
+    CreateRedSlime(&enemy);
+    enemy.position = (Vector2){.x = 100, .y = 100};
+    AddEnemyToWorld(&game->worlds[0], enemy);
+
 
     Camera2D camera = {0};
     camera.target = game->player.position;
@@ -66,11 +77,11 @@ void UpdateGame(Game* game)
 
         if (IsKeyPressed(KEY_J))
         {
-            SaveTileMap(&game->worlds[0].tile_map, "asset/maps/default_map.map");
+            SaveTileMap(&game->worlds[game->current_world_idx].tile_map, "asset/maps/default_map.map");
         }
         else if (IsKeyPressed(KEY_K))
         {
-            LoadTileMap(&game->worlds[0].tile_map, "asset/maps/default_map.map");
+            LoadTileMap(&game->worlds[game->current_world_idx].tile_map, "asset/maps/default_map.map");
         }
         UpdatePlayer(&game->player, &game->worlds[game->current_world_idx]);
         break;

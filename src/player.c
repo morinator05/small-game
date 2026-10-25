@@ -70,6 +70,9 @@ void CreatePlayer(Player* player)
     };
     player->hp = PLAYER_DEFAULT_HP;
     player->is_attacking = false;
+    player->attack_progress = -1.f;
+    player->current_direction = IDLE;
+    AcquireWeapon(player, UNARMED);
 }
 
 static TileCodes TileBeneathPlayer(const Player* player, const TileMap* tilemap)
@@ -86,7 +89,7 @@ static TileCodes TileBeneathPlayer(const Player* player, const TileMap* tilemap)
 
 static void PlayWalkingSound(const Player* player, const TileMap* tilemap)
 {
-    if (!IsSoundPlaying(assets.player_walk_gras) & !IsSoundPlaying(assets.player_walk_dirt))
+    if (!IsSoundPlaying(assets.player_walk_gras) && !IsSoundPlaying(assets.player_walk_dirt))
     {
         switch (TileBeneathPlayer(player, tilemap))
         {
@@ -216,6 +219,8 @@ void UpdatePlayer(Player* player, World* world)
     for (int i = 0; i < world->enemy_count; i++)
     {
         Enemy* target = world->enemies + i;
+        if (!target->alive) continue;
+
         const float distance_to_target = Vector2Distance(player->position, target->position);
 
         if (distance_to_target <= player->weapon.reach)
@@ -250,5 +255,7 @@ void AcquireWeapon(Player* player, const WeaponTypes weapon_type)
             .hit_rate = 1.f,
             .reach = 40
         };
+        break;
+    default: break;
     }
 }
