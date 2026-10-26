@@ -22,6 +22,7 @@ typedef struct
     Player player;
     Camera2D camera;
     int menu_selection;
+    bool has_save; //decides if the title menu offers Continue
     bool quit;
 } Game;
 

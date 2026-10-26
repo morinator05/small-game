@@ -1,15 +1,36 @@
 #include "../include/world.h"
+
+#include <stdio.h>
+#include <stdlib.h>
+
 #include "../include/enemy.h"
 #include "../include/assets.h"
+#include "../include/levels.h"
 
-void CreateWorld(World* world, const int id, const TileMap tile_map)
+void CreateWorld(World* world, const int id, const char* name)
 {
     *world = (World){
         .id = id,
-        .tile_map = tile_map,
         .enemy_count = 0,
         .trigger_count = 0
     };
+    snprintf(world->name, sizeof(world->name), "%s", name);
+
+    char path[256];
+    GetWorldMapPath(world, path, sizeof(path));
+    LoadTileMap(&world->tile_map, path);
+    if (world->tile_map.tiles == NULL) CreateEmptyLevel(&world->tile_map);
+}
+
+void DestroyWorld(World* world)
+{
+    free(world->tile_map.tiles);
+    world->tile_map.tiles = NULL;
+}
+
+void GetWorldMapPath(const World* world, char* out, const size_t size)
+{
+    snprintf(out, size, WORLDS_DIR "/%s/terrain.map", world->name);
 }
 
 bool AddEnemyToWorld(World* world, const Enemy enemy)

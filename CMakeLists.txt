@@ -23,7 +23,9 @@ add_executable(testgame2 src/main.c
         include/game.h
         src/game.c
         include/ui.h
-        src/ui.c)
+        src/ui.c
+        include/save.h
+        src/save.c)
 
 target_link_libraries(testgame2 raylib m)
 

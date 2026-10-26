@@ -37,3 +37,6 @@ CMakeUserPresets.json
 # OS
 .DS_Store
 Thumbs.db
+
+# Save games, wherever the game is run from
+saves/

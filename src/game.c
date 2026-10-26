@@ -1,25 +1,26 @@
 #include "../include/game.h"
 
 #include <raymath.h>
-#include <stdlib.h>
 #include <string.h>
 
 #include "../include/assets.h"
-#include "../include/levels.h"
 #include "../include/player.h"
+#include "../include/save.h"
 #include "../include/ui.h"
 
-#define DEFAULT_MAP_PATH "asset/maps/default_map.map"
+#define DEFAULT_WORLD "default"
 
 typedef enum
 {
-    TITLE_MENU_START,
+    TITLE_MENU_CONTINUE,
+    TITLE_MENU_NEW_GAME,
     TITLE_MENU_QUIT,
     TITLE_MENU_COUNT,
 } TitleMenuItem;
 
 static const char* const TITLE_MENU_ITEMS[TITLE_MENU_COUNT] = {
-    [TITLE_MENU_START] = "Start Game",
+    [TITLE_MENU_CONTINUE] = "Continue",
+    [TITLE_MENU_NEW_GAME] = "New Game",
     [TITLE_MENU_QUIT] = "Quit",
 };
 
@@ -29,9 +30,17 @@ static const Menu TITLE_MENU = {
     .item_count = TITLE_MENU_COUNT,
 };
 
+//Without a save the menu starts after Continue, so selections are offset by one
+static const Menu TITLE_MENU_NO_SAVE = {
+    .title = NULL,
+    .items = TITLE_MENU_ITEMS + TITLE_MENU_NEW_GAME,
+    .item_count = TITLE_MENU_COUNT - TITLE_MENU_NEW_GAME,
+};
+
 typedef enum
 {
     GAME_MENU_RESUME,
+    GAME_MENU_SAVE,
     GAME_MENU_TITLE,
     GAME_MENU_QUIT,
     GAME_MENU_COUNT,
@@ -39,6 +48,7 @@ typedef enum
 
 static const char* const GAME_MENU_ITEMS[GAME_MENU_COUNT] = {
     [GAME_MENU_RESUME] = "Resume",
+    [GAME_MENU_SAVE] = "Save Game",
     [GAME_MENU_TITLE] = "Back to Title",
     [GAME_MENU_QUIT] = "Quit Game",
 };
@@ -54,19 +64,11 @@ void CreateGame(Game* game)
     memset(game, 0, sizeof(*game));
     game->state = GAME_STATE_TITLE;
 
-    TileMap default_tile_map = {0};
-    LoadTileMap(&default_tile_map, DEFAULT_MAP_PATH);
-    if (default_tile_map.tiles == NULL) CreateEmptyLevel(&default_tile_map);
-    CreateWorld(&game->worlds[0], 0, default_tile_map);
+    CreateWorld(&game->worlds[0], 0, DEFAULT_WORLD);
     game->current_world_idx = 0;
 
     CreatePlayer(&game->player);
-    game->player.position = (Vector2){3 * TILE_SIZE, 3 * TILE_SIZE};
-    AcquireWeapon(&game->player, SWORD);
-
-    //TODO: testing only, remove once levels place their own enemies
-    SpawnRandomEnemies(&game->worlds[0], RED_SLIME, 10);
-    SpawnRandomEnemies(&game->worlds[0], WIZ, 5);
+    game->has_save = SaveExists();
 
     game->camera = (Camera2D){
         .offset = {floorf(GetScreenWidth() / 2.0f), floorf(GetScreenHeight() / 2.0f)},
@@ -80,8 +82,18 @@ void DestroyGame(Game* game)
 {
     for (int i = 0; i < MAX_WORLDS; i++)
     {
-        free(game->worlds[i].tile_map.tiles);
+        DestroyWorld(&game->worlds[i]);
     }
+}
+
+static void StartNewGame(Game* game)
+{
+    game->player.position = (Vector2){3 * TILE_SIZE, 3 * TILE_SIZE};
+    AcquireWeapon(&game->player, SWORD);
+
+    //TODO: testing only, remove once levels place their own enemies
+    SpawnRandomEnemies(&game->worlds[0], RED_SLIME, 10);
+    SpawnRandomEnemies(&game->worlds[0], WIZ, 5);
 }
 
 static World* GetCurrentWorld(Game* game)
@@ -95,11 +107,30 @@ static void ChangeState(Game* game, const GameState state)
     game->menu_selection = 0;
 }
 
+static const Menu* GetTitleMenu(const Game* game)
+{
+    return game->has_save ? &TITLE_MENU : &TITLE_MENU_NO_SAVE;
+}
+
 static void UpdateTitleState(Game* game)
 {
-    switch (UpdateMenu(&TITLE_MENU, &game->menu_selection))
+    int selected = UpdateMenu(GetTitleMenu(game), &game->menu_selection);
+    if (selected >= 0 && !game->has_save) selected += TITLE_MENU_NEW_GAME;
+
+    switch (selected)
     {
-    case TITLE_MENU_START: ChangeState(game, GAME_STATE_PLAYING);
+    case TITLE_MENU_CONTINUE:
+        if (LoadGame(game)) ChangeState(game, GAME_STATE_PLAYING);
+        else
+        {
+            //Don't play on a half loaded game, start over on the title instead
+            DestroyGame(game);
+            CreateGame(game);
+        }
+        break;
+    case TITLE_MENU_NEW_GAME:
+        StartNewGame(game);
+        ChangeState(game, GAME_STATE_PLAYING);
         break;
     case TITLE_MENU_QUIT: game->quit = true;
         break;
@@ -139,8 +170,10 @@ static void UpdateEditorState(Game* game)
     MovePlayer(&game->player, &world->tile_map);
     UpdateEditor(&world->tile_map, game->camera);
 
-    if (IsKeyPressed(KEY_J)) SaveTileMap(&world->tile_map, DEFAULT_MAP_PATH);
-    else if (IsKeyPressed(KEY_K)) LoadTileMap(&world->tile_map, DEFAULT_MAP_PATH);
+    char map_path[256];
+    GetWorldMapPath(world, map_path, sizeof(map_path));
+    if (IsKeyPressed(KEY_J)) SaveTileMap(&world->tile_map, map_path);
+    else if (IsKeyPressed(KEY_K)) LoadTileMap(&world->tile_map, map_path);
 
     UpdatePlayer(&game->player, world);
 }
@@ -161,6 +194,10 @@ static void UpdateMenuState(Game* game)
     switch (UpdateMenu(&GAME_MENU, &game->menu_selection))
     {
     case GAME_MENU_RESUME: ChangeState(game, GAME_STATE_PLAYING);
+        break;
+    case GAME_MENU_SAVE:
+        SaveGame(game);
+        ChangeState(game, GAME_STATE_PLAYING);
         break;
     case GAME_MENU_TITLE: //Start over with a fresh game
         DestroyGame(game);
@@ -226,7 +263,7 @@ void DrawGame(Game* game)
     {
     case GAME_STATE_TITLE:
         DrawTitleScreen();
-        DrawMenu(&TITLE_MENU, game->menu_selection);
+        DrawMenu(GetTitleMenu(game), game->menu_selection);
         break;
     case GAME_STATE_PLAYING: DrawHud(&game->player);
         break;
