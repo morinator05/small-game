@@ -7,6 +7,7 @@
 
 #define MAX_ENEMIES 100
 #define MAX_TRIGGERS 10
+#define SPAWN_MAX_ATTEMPTS 1000
 
 typedef Enemy Enemy;
 
@@ -31,6 +32,8 @@ typedef struct World
 
 void CreateWorld(World* world, int id, TileMap tile_map);
 bool AddEnemyToWorld(World* world, Enemy enemy);
+//Places count enemies of the given type on random walkable tiles, returns how many were spawned
+int SpawnRandomEnemies(World* world, Type type, int count);
 bool AddTriggerToWorld(World* world, Rectangle bounds, int target_world_id, Vector2 target_spawn);
 
 void UpdateWorld(World* world, void* player);
